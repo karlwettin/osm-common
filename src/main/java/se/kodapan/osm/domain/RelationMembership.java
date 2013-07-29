@@ -45,7 +45,7 @@ public class RelationMembership implements Serializable {
     return "RelationMembership{" +
         "role='" + role + '\'' +
         ", relation=" + relation +
-        ", object=" + object +
+        ", object.id=" + (object != null ? object.getId() : "null") +
         '}';
   }
 }

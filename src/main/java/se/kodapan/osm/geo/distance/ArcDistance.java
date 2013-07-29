@@ -1,34 +1,21 @@
-package se.kodapan.osm.domain;
+package se.kodapan.osm.geo.distance;
 
 /**
  * @author kalle
- * @since 2013-07-27 20:49
+ * @since 2013-07-29 15:20
  */
-public class Distance {
-
-
-  public static double euclideanDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeB) {
-
-    double latDistance = latitudeB - latitudeA;
-    double lngDistance = longitudeB - longitudeA;
-    double result = 0;
-    result += latDistance * latDistance;
-    result += lngDistance * lngDistance;
-    return Math.sqrt(result);
-
-  }
-
+public class ArcDistance  extends Distance {
 
   /**
    * copied from org.apache.lucene.spatial.base.LatLng
-   *
    * @param latitudeA
    * @param longitudeA
    * @param latitudeB
    * @param longitudeB
-   * @return kilometers
+   * @return distance in kilometers
    */
-  public static double arcDistance(double latitudeA, double longitudeA, double latitudeB, double longitudeB) {
+  @Override
+  public double calculate(double latitudeA, double longitudeA, double latitudeB, double longitudeB) {
 
     longitudeA = normalizeLongitude(longitudeA);
     longitudeB = normalizeLongitude(longitudeB);
@@ -67,7 +54,7 @@ public class Distance {
    * @param a
    * @return
    */
-  private static double radians(double a) {
+  private double radians(double a) {
     return a * 0.01745329251994;
   }
 
@@ -77,7 +64,7 @@ public class Distance {
    * @param longitude
    * @return
    */
-  private static double normalizeLongitude(double longitude) {
+  private double normalizeLongitude(double longitude) {
     double delta = 0;
     if (longitude < 0) delta = 360;
     if (longitude >= 0) delta = -360;
@@ -90,5 +77,4 @@ public class Distance {
     return normalizedLongitude;
   }
 
-
-}
+  }
