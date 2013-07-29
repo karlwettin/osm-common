@@ -1,10 +1,6 @@
 package se.kodapan.osm.services.nominatim;
 
-import junit.framework.TestCase;
-import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.services.overpass.AbstractCachedOverpass;
-import se.kodapan.osm.services.overpass.FileSystemCachedOverpass;
-import se.kodapan.osm.services.overpass.Overpass;
+import se.kodapan.osm.OsmCommonTest;
 
 import java.io.File;
 
@@ -12,7 +8,7 @@ import java.io.File;
  * @author kalle
  * @since 2013-07-28 20:00
  */
-public class TestFileSystemCachedNominatim extends TestCase {
+public class TestFileSystemCachedNominatim extends OsmCommonTest {
 
   int getCachedIndex = 0;
   int setCachedIndex = 0;
@@ -47,6 +43,8 @@ public class TestFileSystemCachedNominatim extends TestCase {
 
       }
     };
+
+    setUserAgent(nominatim);
 
     nominatim.open();
 

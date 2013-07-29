@@ -32,8 +32,10 @@ public class Overpass {
 
   private HttpClient httpClient = new DefaultHttpClient();
 
+  private static String defaultUserAgent = "Unnamed instance of " + Overpass.class.getName() + ", https://github.com/karlwettin/osm-common/";
+  private String userAgent = defaultUserAgent;
+
   private String serverURL = "http://www.overpass-api.de/api/interpreter";
-//  private String serverURL = "http://localhost:8765/api/interpreter";
 
   public void open() throws Exception {
 
@@ -47,9 +49,24 @@ public class Overpass {
     return execute(overpassQuery, null);
   }
 
+  /**
+   * 2013-07-28 Usage policy accept 10 000 requests or 5GB data per day using up to two threads.
+   * See http://wiki.openstreetmap.org/wiki/Overpass_API#Introduction
+   *
+   * @param overpassQuery
+   * @param queryDescription
+   * @return
+   * @throws Exception
+   */
   public String execute(String overpassQuery, String queryDescription) throws Exception {
 
+    if (defaultUserAgent.equals(userAgent)) {
+      throw new NullPointerException("Overpass HTTP header User-Agent not set!");
+    }
+
     HttpPost post = new HttpPost(serverURL);
+    post.setHeader("User-Agent", userAgent);
+
     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
     nameValuePairs.add(new BasicNameValuePair("data", overpassQuery.toString()));
     post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -66,6 +83,8 @@ public class Overpass {
     log.debug("Overpass response received in " + (ended - started) + " ms.");
 
     return buffer.toString();
+
+
 
   }
 
@@ -171,5 +190,13 @@ public class Overpass {
 
   public void setServerURL(String serverURL) {
     this.serverURL = serverURL;
+  }
+
+  public String getUserAgent() {
+    return userAgent;
+  }
+
+  public void setUserAgent(String userAgent) {
+    this.userAgent = userAgent;
   }
 }

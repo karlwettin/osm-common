@@ -2,11 +2,6 @@ package se.kodapan.osm.domain.root;
 
 import junit.framework.TestCase;
 import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.services.nominatim.Nominatim;
-import se.kodapan.osm.services.nominatim.NominatimJsonResponseParser;
-import se.kodapan.osm.services.nominatim.NominatimQueryBuilder;
-
-import java.util.List;
 
 /**
  * @author kalle

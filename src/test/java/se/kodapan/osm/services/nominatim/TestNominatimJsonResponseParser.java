@@ -1,7 +1,6 @@
 package se.kodapan.osm.services.nominatim;
 
-import junit.framework.TestCase;
-import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.services.nominatim.NominatimJsonResponseParser.Result;
 import se.kodapan.osm.services.overpass.Overpass;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * @author kalle
  * @since 2013-07-27 21:15
  */
-public class TestNominatimJsonResponseParser extends TestCase {
+public class TestNominatimJsonResponseParser extends OsmCommonTest {
 
   public void test() throws Exception {
 
@@ -22,6 +21,7 @@ public class TestNominatimJsonResponseParser extends TestCase {
             .addCountryCode("se");
 
     Nominatim nominatim = new Nominatim();
+    setUserAgent(nominatim);
     NominatimJsonResponseParser parser = new NominatimJsonResponseParser();
     List<Result> results = parser.parse(nominatim.search(queryBuilder.build()));
 
@@ -32,6 +32,7 @@ public class TestNominatimJsonResponseParser extends TestCase {
     assertEquals(1, results.size());
 
     Overpass overpass = new Overpass();
+    setUserAgent(overpass);
     overpass.loadAllObjects(parser.getRoot());
 
 

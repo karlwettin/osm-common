@@ -1,6 +1,6 @@
 package se.kodapan.osm.services.overpass;
 
-import junit.framework.TestCase;
+import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
@@ -9,11 +9,12 @@ import se.kodapan.osm.domain.Way;
  * @author kalle
  * @since 2013-05-04 16:09
  */
-public class TestOverpass extends TestCase {
+public class TestOverpass extends OsmCommonTest {
 
   public void test() throws Exception {
 
     Overpass overpass = new Overpass();
+    setUserAgent(overpass);
 
     Node halmstad = overpass.getNode(1594669682l);
     Way magnusStenbocksVäg = overpass.getWay(43153974l);

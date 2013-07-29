@@ -1,6 +1,7 @@
 package se.kodapan.osm.services.overpass;
 
 import junit.framework.TestCase;
+import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.domain.Node;
 
 import java.io.File;
@@ -9,7 +10,7 @@ import java.io.File;
  * @author kalle
  * @since 2013-07-28 00:24
  */
-public class TestFileSystemCachedOverpass extends TestCase {
+public class TestFileSystemCachedOverpass extends OsmCommonTest {
 
   int getCachedIndex = 0;
   int setCachedIndex = 0;
@@ -46,6 +47,7 @@ public class TestFileSystemCachedOverpass extends TestCase {
     };
 
     Overpass overpass = decoration;
+    setUserAgent(overpass);
 
     overpass.open();
 
