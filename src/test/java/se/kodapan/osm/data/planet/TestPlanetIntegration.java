@@ -7,6 +7,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.kodapan.osm.data.planet.changesetstore.ChangesetStore;
 import se.kodapan.osm.data.planet.changesetstore.ChangesetStoreState;
 import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser;
@@ -21,7 +23,9 @@ import java.util.Date;
  * @author kalle
  * @since 2013-05-04 15:05
  */
-public class TestIntegration extends TestCase {
+public class TestPlanetIntegration extends TestCase {
+
+  private static Logger log = LoggerFactory.getLogger(TestPlanetIntegration.class);
 
   public void test() throws Exception {
 
@@ -57,7 +61,7 @@ public class TestIntegration extends TestCase {
         reader.close();
         break;
       } catch (IOException e) {
-        e.printStackTrace();
+        log.warn("Ignoring bad file found at " +  get.getURI(), e);
         continue;
       } finally {
         EntityUtils.consume(httpResponse.getEntity());
