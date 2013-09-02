@@ -11,15 +11,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser;
-import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.domain.OsmObject;
-import se.kodapan.osm.domain.Relation;
-import se.kodapan.osm.domain.Way;
+import se.kodapan.osm.domain.*;
 import se.kodapan.osm.domain.root.Root;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -112,6 +110,44 @@ public class Overpass {
 
   public Node getNode(long id) throws Exception {
     return getNode(new InstantiatedOsmXmlParser(), id);
+  }
+
+  private static OsmObjectVisitor<String> getObjectType = new OsmObjectVisitor<String>() {
+    @Override
+    public String visit(Node node) {
+      return "node";
+    }
+
+    @Override
+    public String visit(Way way) {
+      return "way";
+    }
+
+    @Override
+    public String visit(Relation relation) {
+      return "relation";
+    }
+  };
+
+  public void loadObjects(InstantiatedOsmXmlParser parser, Collection<OsmObject> osmObjects) throws Exception {
+
+    StringWriter xml = new StringWriter(1000 + osmObjects.size() * 40);
+    xml.write("<osm-script>\n");
+
+    for (OsmObject osmObject : osmObjects) {
+      xml.append("  <id-query ref=\"");
+      xml.append("\" type=\"");
+      xml.append(osmObject.accept(getObjectType));
+      xml.append("\" />\n");
+    }
+
+    xml.append("  <print/>\n");
+    xml.append("</osm-script>");
+
+    String response = execute(xml.toString(), "Fetching " + osmObjects + " objects by identity...");
+    parser.parse(new StringReader(response));
+
+
   }
 
   public Node getNode(InstantiatedOsmXmlParser parser, long id) throws Exception {
