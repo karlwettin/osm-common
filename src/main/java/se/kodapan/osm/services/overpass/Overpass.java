@@ -6,7 +6,12 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +33,8 @@ public class Overpass {
 
   private static Logger log = LoggerFactory.getLogger(Overpass.class);
 
-  private HttpClient httpClient = new DefaultHttpClient();
+  private ClientConnectionManager cm;
+  private HttpClient httpClient;
 
   private static String defaultUserAgent = "Unnamed instance of " + Overpass.class.getName() + ", https://github.com/karlwettin/osm-common/";
   private String userAgent = defaultUserAgent;
@@ -36,6 +42,12 @@ public class Overpass {
   private String serverURL = "http://www.overpass-api.de/api/interpreter";
 
   public void open() throws Exception {
+    SchemeRegistry schemeRegistry = new SchemeRegistry();
+    schemeRegistry.register(
+        new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+
+    cm = new ThreadSafeClientConnManager(schemeRegistry);
+    httpClient = new DefaultHttpClient(cm);
 
   }
 
@@ -144,7 +156,7 @@ public class Overpass {
     xml.append("  <print/>\n");
     xml.append("</osm-script>");
 
-    String response = execute(xml.toString(), "Fetching " + osmObjects + " objects by identity...");
+    String response = execute(xml.toString(), "Fetching " + osmObjects.size() + " objects by identity...");
     parser.parse(new StringReader(response));
 
 
@@ -235,4 +247,5 @@ public class Overpass {
   public void setUserAgent(String userAgent) {
     this.userAgent = userAgent;
   }
+
 }
