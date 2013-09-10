@@ -10,14 +10,16 @@ import se.kodapan.osm.domain.root.Root;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 
 /**
  * An .osm.xml and .osc.xml parser
  * into a fully instantiated object graph.
- *
+ * <p/>
  * This class is not thread safe!
  *
  * @author kalle
@@ -38,7 +40,9 @@ public class InstantiatedOsmXmlParser {
     delete;
   }
 
-  public InstantiatedOsmXmlParserDelta parse( Reader xml) throws Exception {
+  public InstantiatedOsmXmlParserDelta parse(Reader xml) throws OsmXmlParserException {
+
+    long started = System.currentTimeMillis();
 
     log.debug("Begin parsing...");
 
@@ -46,6 +50,7 @@ public class InstantiatedOsmXmlParser {
 
     XMLInputFactory xmlif = XMLInputFactory.newInstance();
 
+    try {
     XMLStreamReader xmlr = xmlif.createXMLStreamReader(xml);
 
     OsmObject current = null;
@@ -286,7 +291,6 @@ public class InstantiatedOsmXmlParser {
             } else if (version > wayToRemove.getVersion() + 1) {
               throw new OsmXmlParserException("Inconsistency, too great way version found during delete way.");
             }
-
 
 
             if (wayToRemove.getNodes() != null) {
@@ -572,6 +576,9 @@ public class InstantiatedOsmXmlParser {
     }
 
     xmlr.close();
+  } catch (XMLStreamException ioe) {
+    throw new OsmXmlParserException(ioe);
+  }
 
     log.debug("Done parsing.");
 
@@ -588,10 +595,13 @@ public class InstantiatedOsmXmlParser {
         + delta.getModifiedRelationIdentities().size() + "/"
         + delta.getDeletedRelationIdentities().size() + " relations created/modified/deleted.");
 
-    log.info("Root now contains " + root.getNodes().size() + " nodes, " + root.getWays().size() + " ways and " + root.getRelations().size() + " relations.");
+    long timespent = System.currentTimeMillis() - started;
+
+    log.info("Parsed in " + timespent + " milliseconds. Root now contains " + root.getNodes().size() + " nodes, " + root.getWays().size() + " ways and " + root.getRelations().size() + " relations.");
 
 
     return delta;
+
 
   }
 
@@ -602,7 +612,7 @@ public class InstantiatedOsmXmlParser {
     return currentWay;
   }
 
-  private void parseObjectAttributes(XMLStreamReader xmlr, OsmObject object, String... parsedAttributes) throws ParseException {
+  private void parseObjectAttributes(XMLStreamReader xmlr, OsmObject object, String... parsedAttributes)  {
 
     for (int attributeIndex = 0; attributeIndex < xmlr.getAttributeCount(); attributeIndex++) {
       String key = xmlr.getAttributeLocalName(attributeIndex);
@@ -624,7 +634,11 @@ public class InstantiatedOsmXmlParser {
         object.setVisible(Boolean.valueOf(value));
 
       } else if ("timestamp".equals(key)) {
-        object.setTimestamp(timestampFormat.parse(value).getTime());
+        try {
+          object.setTimestamp(timestampFormat.parse(value).getTime());
+        } catch (ParseException pe) {
+          throw new RuntimeException(pe);
+        }
 
       } else {
 

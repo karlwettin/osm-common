@@ -39,8 +39,8 @@ public class TestOverpass extends OsmCommonTest {
 
 
     Node halmstad = overpass.getNode(1594669682l);
-    Way magnusStenbocksVäg = overpass.getWay(43153974l);
-    Relation sweden = overpass.getRelation(52822l);
+    Way magnusStenbocksVäg = overpass.loadWay(43153974l);
+    Relation sweden = overpass.loadRelation(52822l);
 
     System.currentTimeMillis();
 

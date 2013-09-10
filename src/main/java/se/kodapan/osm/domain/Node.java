@@ -53,6 +53,24 @@ public class Node extends OsmObject implements Serializable {
     this.longitude = longitude;
   }
 
+  public double getY() {
+    return getLatitude();
+  }
+
+  public void setY(double latitude) {
+    setLatitude(latitude);
+  }
+
+  public double getX() {
+    return getLongitude();
+  }
+
+  public void setX(double longitude) {
+    setLongitude(longitude);
+  }
+
+
+
   @Override
   public String toString() {
     return "Node{" +

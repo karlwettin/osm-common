@@ -135,4 +135,24 @@ public class Root implements Serializable {
     return objects;
   }
 
+  public List<Node> findNodeByLatitudeAndLongitude(double latitude, double longitude) {
+    List<Node> nodes = new ArrayList<Node>(100);
+    for (Node node : getNodes().values()) {
+      if (node.getLatitude() == latitude && node.getLongitude() == longitude) {
+        nodes.add(node);
+      }
+    }
+    return nodes;
+  }
+
+  public Node findFirstNodeByLatitudeAndLongitude(double latitude, double longitude) {
+    for (Node node : getNodes().values()) {
+      if (node.getLatitude() == latitude && node.getLongitude() == longitude) {
+        return node;
+      }
+    }
+    return null;
+  }
+
+
 }

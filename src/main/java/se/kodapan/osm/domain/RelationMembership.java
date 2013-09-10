@@ -44,7 +44,7 @@ public class RelationMembership implements Serializable {
   public String toString() {
     return "RelationMembership{" +
         "role='" + role + '\'' +
-        ", relation=" + relation +
+        ", relation.id=" + (relation != null ? relation.getId() : "null") +
         ", object.id=" + (object != null ? object.getId() : "null") +
         '}';
   }

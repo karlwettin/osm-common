@@ -12,17 +12,20 @@ public abstract class AbstractCachedOverpass extends Overpass {
   private static Logger log = LoggerFactory.getLogger(AbstractCachedOverpass.class);
 
   @Override
-  public String execute(String overpassQuery, String queryDescription) throws Exception {
-    String response = getCachedResponse(overpassQuery);
-    if (response == null) {
-      log.info("No cached response available, sending query to super.");
-      response = super.execute(overpassQuery, queryDescription);
-      setCachedResponse(overpassQuery, response);
-    } else if (log.isDebugEnabled()) {
-      log.debug("Cached response available.");
+  public String execute(String overpassQuery, String queryDescription) throws OverpassException {
+    try {
+      String response = getCachedResponse(overpassQuery);
+      if (response == null) {
+        log.info("No cached response available, sending query to super.");
+        response = super.execute(overpassQuery, queryDescription);
+        setCachedResponse(overpassQuery, response);
+      } else if (log.isDebugEnabled()) {
+        log.debug("Cached response available.");
+      }
+      return response;
+    } catch (Exception e) {
+      throw new OverpassException(e);
     }
-
-    return response;
   }
 
   public abstract String getCachedResponse(String url) throws Exception;

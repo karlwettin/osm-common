@@ -15,12 +15,14 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kodapan.osm.data.planet.parser.xml.OsmXmlParserException;
 import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser;
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.domain.root.Root;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,8 +45,7 @@ public class Overpass {
 
   public void open() throws Exception {
     SchemeRegistry schemeRegistry = new SchemeRegistry();
-    schemeRegistry.register(
-        new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+    schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
 
     cm = new ThreadSafeClientConnManager(schemeRegistry);
     httpClient = new DefaultHttpClient(cm);
@@ -55,7 +56,7 @@ public class Overpass {
 
   }
 
-  public String execute(String overpassQuery) throws Exception {
+  public String execute(String overpassQuery) throws OverpassException {
     return execute(overpassQuery, null);
   }
 
@@ -68,8 +69,9 @@ public class Overpass {
    * @return
    * @throws Exception
    */
-  public String execute(String overpassQuery, String queryDescription) throws Exception {
+  public String execute(String overpassQuery, String queryDescription) throws OverpassException {
 
+    try {
     if (defaultUserAgent.equals(userAgent)) {
       throw new NullPointerException("Overpass HTTP header User-Agent not set!");
     }
@@ -78,50 +80,58 @@ public class Overpass {
     post.setHeader("User-Agent", userAgent);
 
     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-    nameValuePairs.add(new BasicNameValuePair("data", overpassQuery.toString()));
+    nameValuePairs.add(new BasicNameValuePair("data", overpassQuery));
     post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-    if (queryDescription != null) {
-      log.debug("Executing overpass query: " + queryDescription);
-    }
+
+    log.debug("Executing overpass query: " + queryDescription + "\n" + overpassQuery);
+
     long started = System.currentTimeMillis();
     HttpResponse response = httpClient.execute(post);
 
     StringWriter buffer = new StringWriter();
     IOUtils.copy(response.getEntity().getContent(), buffer);
     long ended = System.currentTimeMillis();
-    log.debug("Overpass response received in " + (ended - started) + " ms.");
+
+    if (log.isInfoEnabled()) {
+      log.info("Overpass response for " + (queryDescription != null ? queryDescription : "un named query") + " was " + buffer.getBuffer().length() + " characters and received in " + (ended - started) + " ms.");
+      if (log.isDebugEnabled()) {
+        log.debug(buffer.getBuffer().toString());
+      }
+    }
+
 
     return buffer.toString();
-
-
+    } catch (Exception e) {
+      throw new OverpassException(e);
+    }
 
   }
 
-  public void loadAllObjects(Root root) throws Exception {
+  public void loadAllObjects(Root root) throws OverpassException, OsmXmlParserException {
 
     InstantiatedOsmXmlParser parser = new InstantiatedOsmXmlParser();
     parser.setRoot(root);
 
     for (Node node : root.getNodes().values()) {
       if (!node.isLoaded()) {
-        getNode(parser, node.getId());
+        loadNode(parser, node.getId());
       }
     }
     for (Way way : root.getWays().values()) {
       if (!way.isLoaded()) {
-        getWay(parser, way.getId());
+        loadWay(parser, way.getId());
       }
     }
     for (Relation relation : root.getRelations().values()) {
       if (!relation.isLoaded()) {
-        getRelation(parser, relation.getId());
+        loadRelation(parser, relation.getId());
       }
     }
   }
 
   public Node getNode(long id) throws Exception {
-    return getNode(new InstantiatedOsmXmlParser(), id);
+    return loadNode(new InstantiatedOsmXmlParser(), id);
   }
 
   private static OsmObjectVisitor<String> getObjectType = new OsmObjectVisitor<String>() {
@@ -141,7 +151,7 @@ public class Overpass {
     }
   };
 
-  public void loadObjects(InstantiatedOsmXmlParser parser, Collection<OsmObject> osmObjects) throws Exception {
+  public void loadObjects(InstantiatedOsmXmlParser parser, Collection<? extends OsmObject> osmObjects) throws OverpassException, OsmXmlParserException {
 
     StringWriter xml = new StringWriter(1000 + osmObjects.size() * 40);
     xml.write("<osm-script>\n");
@@ -162,7 +172,7 @@ public class Overpass {
 
   }
 
-  public Node getNode(InstantiatedOsmXmlParser parser, long id) throws Exception {
+  public Node loadNode(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
 
     String response = execute("<osm-script>\n" +
         "  <id-query ref=\"" + id + "\" type=\"node\"/>\n" +
@@ -174,11 +184,11 @@ public class Overpass {
 
   }
 
-  public Way getWay(long id) throws Exception {
-    return getWay(new InstantiatedOsmXmlParser(), id);
+  public Way loadWay(long id) throws OverpassException, OsmXmlParserException {
+    return loadWay(new InstantiatedOsmXmlParser(), id);
   }
 
-  public Way getWay(InstantiatedOsmXmlParser parser, long id) throws Exception {
+  public Way loadWay(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
 
     parser.parse(new StringReader(execute("<osm-script>\n" +
         "  <id-query ref=\"" + id + "\" type=\"way\"/>\n" +
@@ -197,12 +207,12 @@ public class Overpass {
 
   }
 
-  public Relation getRelation(long id) throws Exception {
-    return getRelation(new InstantiatedOsmXmlParser(), id);
+  public Relation loadRelation(long id) throws OverpassException, OsmXmlParserException {
+    return loadRelation(new InstantiatedOsmXmlParser(), id);
   }
 
 
-  public Relation getRelation(InstantiatedOsmXmlParser parser, long id) throws Exception {
+  public Relation loadRelation(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
 
 
     parser.parse(new StringReader(execute("<osm-script>\n" +
@@ -219,12 +229,11 @@ public class Overpass {
     parser.parse(new StringReader(execute("<osm-script>\n" +
         "  <union>\n" +
         "    <id-query ref=\"" + id + "\" type=\"relation\"/>\n" +
-        "    <recurse type=\"relation-way\"/>\n" +
-        "    <recurse type=\"relation-node\"/>\n" +
-        "    <recurse type=\"way-node\"/>\n" +
+        "  <recurse type=\"relation-way\"/>\n" +
+        "  <recurse type=\"way-node\"/>\n" +
         "  </union>\n" +
         "  <print/>\n" +
-        "</osm-script>", "Getting relation " + id)));
+        "</osm-script>", "Getting relation nodes" + id)));
 
 
     return parser.getRoot().getRelations().get(id);
@@ -246,6 +255,33 @@ public class Overpass {
 
   public void setUserAgent(String userAgent) {
     this.userAgent = userAgent;
+  }
+
+  public void loadEnvelope(InstantiatedOsmXmlParser parser, double latitudeSouth, double longitudeWest, double latitudeNorth, double longitudeEast) throws OverpassException, OsmXmlParserException {
+    DecimalFormat df = new DecimalFormat("#.#####################");
+    String bbox = "<bbox-query s=\"" + df.format(latitudeSouth) + "\" n=\"" + df.format(latitudeNorth) + "\" w=\"" + df.format(longitudeWest) + "\" e=\"" + df.format(longitudeEast) + "\"/>";
+
+    parser.parse(new StringReader(execute("<osm-script>\n" +
+        "  " + bbox + "\n" +
+        "  <print/>\n" +
+        "</osm-script>", "Getting nodes in bbox " + bbox)));
+
+    parser.parse(new StringReader(execute("<osm-script>\n" +
+        "  " + bbox + "\n" +
+        "  <recurse type=\"node-way\"/>" +
+        "  <print/>\n" +
+        "</osm-script>", "Getting ways in bbox " + bbox)));
+
+    parser.parse(new StringReader(execute("<osm-script>\n" +
+        "  " + bbox + "\n" +
+        "  <recurse type=\"node-relation\"/>" +
+        "  <print/>\n" +
+        "</osm-script>", "Getting relations in bbox " + bbox)));
+
+    // todo make sure this really loads everything!
+    System.currentTimeMillis();
+
+
   }
 
 }
