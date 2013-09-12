@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.text.ParseException;
 
 /**
@@ -40,6 +41,9 @@ public class InstantiatedOsmXmlParser {
     delete;
   }
 
+  public InstantiatedOsmXmlParserDelta parse(String xml) throws OsmXmlParserException {
+    return parse(new StringReader(xml));
+  }
   public InstantiatedOsmXmlParserDelta parse(Reader xml) throws OsmXmlParserException {
 
     long started = System.currentTimeMillis();

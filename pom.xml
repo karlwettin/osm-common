@@ -29,6 +29,12 @@
             <version>2.9.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>1.12</version>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>net.sourceforge.nekohtml</groupId>-->
             <!--<artifactId>nekohtml</artifactId>-->

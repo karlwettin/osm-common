@@ -16,7 +16,7 @@ public class InternImpl<T> implements Intern<T>, Serializable {
   public T intern(T object) {
     T interned = map.get(object);
     if (interned == null) {
-      map.put(object, interned);
+      map.put(object, object);
       interned = object;
     }
     return interned;
