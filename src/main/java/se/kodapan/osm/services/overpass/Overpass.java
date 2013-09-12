@@ -20,6 +20,7 @@ import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlPars
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.domain.root.Root;
 
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
@@ -90,7 +91,7 @@ public class Overpass {
     HttpResponse response = httpClient.execute(post);
 
     StringWriter buffer = new StringWriter();
-    IOUtils.copy(response.getEntity().getContent(), buffer);
+    IOUtils.copy(new InputStreamReader(response.getEntity().getContent(), "utf8"), buffer);
     long ended = System.currentTimeMillis();
 
     if (log.isInfoEnabled()) {
