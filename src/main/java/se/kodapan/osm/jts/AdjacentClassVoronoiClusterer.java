@@ -167,8 +167,8 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
 
     log.debug("Merge adjacent class regions to single polygon");
-    // merge adjacent postnummer regions to single polygon
-
+    // merge adjacent class regions to single polygon.
+    // first create a list of all polygons with same class that share at least one coordinate.
     Map<ClassType, Set<Set<Geometry>>> adjacentRegionsByClass = new HashMap<ClassType, Set<Set<Geometry>>>();
 
     for (Map.Entry<ClassType, Set<Geometry>> entry : voronoiRegionsByClass.entrySet()) {
