@@ -12,6 +12,7 @@ import se.kodapan.osm.domain.root.Root;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Takes a number of points per class
@@ -30,6 +31,8 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
   public AdjacentClassVoronoiClusterer(GeometryFactory factory) {
     this.factory = factory;
   }
+
+  private int numberOfThreads = 16;
 
   private boolean bound = false;
   private double boundsLatitudeSouth;
@@ -61,7 +64,7 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
   private Map<ClassType, Set<Coordinate>> coordinatesByClass = new HashMap<ClassType, Set<Coordinate>>();
 
 
-  public Map<ClassType, List<Polygon>> build() {
+  public Map<ClassType, List<Polygon>> build() throws InterruptedException {
 
     log.debug("Selecting unique voronoi sites...");
 
@@ -165,7 +168,6 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
     log.debug("Merge adjacent class regions to single polygon");
     // merge adjacent postnummer regions to single polygon
-    // todo this could be multi threaded
 
     Map<ClassType, Set<Set<Geometry>>> adjacentRegionsByClass = new HashMap<ClassType, Set<Set<Geometry>>>();
 
@@ -184,123 +186,171 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
     }
 
 
-    Map<ClassType, List<List<Geometry>>> mergedAdjacentRegionsByClass = new HashMap<ClassType, List<List<Geometry>>>();
+    final Map<ClassType, List<List<Geometry>>> mergedAdjacentRegionsByClass = new HashMap<ClassType, List<List<Geometry>>>();
+    {
+      final Queue<Map.Entry<ClassType, Set<Set<Geometry>>>> queue = new ConcurrentLinkedQueue<Map.Entry<ClassType, Set<Set<Geometry>>>>(adjacentRegionsByClass.entrySet());
 
-    // todo at least this loop could be processed in multiple threads!
-    for (Map.Entry<ClassType, Set<Set<Geometry>>> entry : adjacentRegionsByClass.entrySet()) {
+      Thread[] threads = new Thread[numberOfThreads];
+      for (int i = 0; i < threads.length; i++) {
+        Thread thread = new Thread(new Runnable() {
+          @Override
+          public void run() {
+            Map.Entry<ClassType, Set<Set<Geometry>>> entry;
+            while ((entry = queue.poll()) != null) {
+              long timer = System.currentTimeMillis();
 
-      long timer = System.currentTimeMillis();
+              log.debug("Class " + entry.getKey() + " containing " + entry.getValue().size() + " voronoi polygons merge");
 
-      log.debug("Class " + entry.getKey() + " containing " + entry.getValue().size() + " voronoi polygons merge");
-
-      List<List<Geometry>> currentRegionsState = new ArrayList<List<Geometry>>(entry.getValue().size());
-      for (Set<Geometry> set : entry.getValue()) {
-        currentRegionsState.add(new ArrayList<Geometry>(set));
-      }
-
-      // run until no more adjacent regions (points that equal in different regions) found
-      // todo this is really slow when there are a lot of voronoi points (as many geometries) for this class
-      // but it works.
-
-      for (Iterator<List<Geometry>> regionsIterator = currentRegionsState.iterator(); regionsIterator.hasNext(); ) {
-        List<Geometry> regions = regionsIterator.next();
-
-        for (Iterator<Geometry> regionIterator = regions.iterator(); regionIterator.hasNext(); ) {
-          Geometry region = regionIterator.next();
-
-          boolean merged = false;
-
-          for (Coordinate point : region.getCoordinates()) {
-
-
-            for (List<Geometry> testRegions : currentRegionsState) {
-              if (testRegions == regions) {
-                continue;
+              List<List<Geometry>> currentRegionsState = new ArrayList<List<Geometry>>(entry.getValue().size());
+              for (Set<Geometry> set : entry.getValue()) {
+                currentRegionsState.add(new ArrayList<Geometry>(set));
               }
-              for (Geometry testRegion : testRegions) {
-                for (Coordinate testPoint : testRegion.getCoordinates()) {
 
-                  if (point.equals(testPoint)) {
-                    testRegions.addAll(regions);
-                    regionsIterator.remove();
-                    merged = true;
+              // run until no more adjacent regions (points that equal in different regions) found
+              // todo this is really slow when there are a lot of voronoi points (as many geometries) for this class
+              // but it works.
+
+              for (Iterator<List<Geometry>> regionsIterator = currentRegionsState.iterator(); regionsIterator.hasNext(); ) {
+                List<Geometry> regions = regionsIterator.next();
+
+                for (Iterator<Geometry> regionIterator = regions.iterator(); regionIterator.hasNext(); ) {
+                  Geometry region = regionIterator.next();
+
+                  boolean merged = false;
+
+                  for (Coordinate point : region.getCoordinates()) {
+
+
+                    for (List<Geometry> testRegions : currentRegionsState) {
+                      if (testRegions == regions) {
+                        continue;
+                      }
+                      for (Geometry testRegion : testRegions) {
+                        for (Coordinate testPoint : testRegion.getCoordinates()) {
+
+                          if (point.equals(testPoint)) {
+                            testRegions.addAll(regions);
+                            regionsIterator.remove();
+                            merged = true;
+                            break;
+                          }
+
+                        }
+                        if (merged) {
+                          break;
+                        }
+                      }
+                      if (merged) {
+                        break;
+                      }
+                    }
+                    if (merged) {
+                      break;
+                    }
+
+                  }
+                  if (merged) {
                     break;
                   }
 
+
                 }
-                if (merged) {
-                  break;
-                }
+
               }
-              if (merged) {
-                break;
-              }
+
+
+              mergedAdjacentRegionsByClass.put(entry.getKey(), currentRegionsState);
+
+              timer = System.currentTimeMillis() - timer;
+
+              log.debug("Class " + entry.getKey() + " containing " + entry.getValue().size() + " voronoi polygons merged to " + currentRegionsState.size() + " adjacent polygon groups in " + timer + " ms");
+
             }
-            if (merged) {
-              break;
-            }
-
           }
-          if (merged) {
-            break;
-          }
-
-
-        }
-
+        });
+        thread.setName("Voronoi polygon merge thread #" + i);
+        thread.setDaemon(true);
+        thread.start();
+        threads[i] = thread;
       }
 
-
-      mergedAdjacentRegionsByClass.put(entry.getKey(), currentRegionsState);
-
-      timer = System.currentTimeMillis() - timer;
-
-      log.debug("Class " + entry.getKey() + " containing " + entry.getValue().size() + " voronoi polygons merged to " + currentRegionsState.size() + " adjacent polygon groups in " + timer + " ms");
+      for (Thread thread : threads) {
+        thread.join();
+      }
 
     }
 
 
     // merged... now union.
 
-    log.debug("Union polygons per class...");
+    log.info("Union polygons per class...");
 
-    Map<ClassType, List<Polygon>> unionPolygonsByClass = new HashMap<ClassType, List<Polygon>>();
+    final Map<ClassType, List<Polygon>> unionPolygonsByClass = new HashMap<ClassType, List<Polygon>>();
+    {
+      final Queue<Map.Entry<ClassType, List<List<Geometry>>>> queue = new ConcurrentLinkedQueue<Map.Entry<ClassType, List<List<Geometry>>>>(mergedAdjacentRegionsByClass.entrySet());
 
-    for (Map.Entry<ClassType, List<List<Geometry>>> entry : mergedAdjacentRegionsByClass.entrySet()) {
+      Thread[] threads = new Thread[numberOfThreads];
 
-      List<Polygon> unions = new ArrayList<Polygon>();
+      for (int i = 0; i < threads.length; i++) {
+        Thread thread = new Thread(new Runnable() {
+          @Override
+          public void run() {
+            Map.Entry<ClassType, List<List<Geometry>>> entry;
+            while ((entry = queue.poll()) != null) {
 
-      for (List<Geometry> regions : entry.getValue()) {
+              long timer = System.currentTimeMillis();
 
-        List<Polygon> unionFactory = new ArrayList<Polygon>(entry.getValue().size());
+              log.debug("Union " + entry.getKey());
 
-        for (Geometry region : regions) {
-          unionFactory.add((Polygon) region);
-        }
+              List<Polygon> unions = new ArrayList<Polygon>();
 
-        Geometry union = factory.buildGeometry(unionFactory).buffer(0);
+              for (List<Geometry> regions : entry.getValue()) {
 
-        if (union instanceof MultiPolygon) {
-          MultiPolygon multiPolygon = (MultiPolygon)union;
-          for (int geometryIndex = 0; geometryIndex < multiPolygon.getNumGeometries(); geometryIndex++) {
-            Geometry geometry = multiPolygon.getGeometryN(geometryIndex);
-            if (geometry instanceof Polygon) {
-              unions.add((Polygon)geometry);
-            } else {
-              throw new RuntimeException("Not implemented! " + union.getClass().getName());
+                List<Polygon> unionFactory = new ArrayList<Polygon>(entry.getValue().size());
+
+                for (Geometry region : regions) {
+                  unionFactory.add((Polygon) region);
+                }
+
+                Geometry union = factory.buildGeometry(unionFactory).buffer(0);
+
+                if (union instanceof MultiPolygon) {
+                  MultiPolygon multiPolygon = (MultiPolygon) union;
+                  for (int geometryIndex = 0; geometryIndex < multiPolygon.getNumGeometries(); geometryIndex++) {
+                    Geometry geometry = multiPolygon.getGeometryN(geometryIndex);
+                    if (geometry instanceof Polygon) {
+                      unions.add((Polygon) geometry);
+                    } else {
+                      throw new RuntimeException("Not implemented! " + union.getClass().getName());
+                    }
+                  }
+                } else if (union instanceof Polygon) {
+                  unions.add((Polygon) union);
+
+                } else {
+                  throw new RuntimeException("Not implemented! " + union.getClass().getName());
+                }
+
+              }
+
+              timer = System.currentTimeMillis() - timer;
+              log.debug("Union " + entry.getKey() + " in " + timer + " ms");
+
+              unionPolygonsByClass.put(entry.getKey(), unions);
+
             }
           }
-        } else if (union instanceof Polygon) {
-          unions.add((Polygon)union);
-
-        } else {
-          throw new RuntimeException("Not implemented! " + union.getClass().getName());
-        }
-
+        });
+        thread.setName("Voronoi polygon union thread #" + i);
+        thread.setDaemon(true);
+        thread.start();
+        threads[i] = thread;
 
       }
+      for (Thread thread : threads) {
+        thread.join();
+      }
 
-      unionPolygonsByClass.put(entry.getKey(), unions);
 
     }
 
@@ -476,7 +526,6 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
     }
     return counter;
   }
-
 
 
 }
