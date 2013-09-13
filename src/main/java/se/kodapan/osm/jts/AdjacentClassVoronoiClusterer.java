@@ -281,7 +281,7 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
     }
 
 
-    // merged... now union.
+    // merged... now union. i.e. make multiple adjacent polygons a single polygon using geometry.buffer(0)
 
     log.info("Union polygons per class...");
 
