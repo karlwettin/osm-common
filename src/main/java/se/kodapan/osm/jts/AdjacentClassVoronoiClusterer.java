@@ -286,57 +286,53 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
     log.info("Union polygons per class...");
 
     final Map<ClassType, List<Polygon>> unionPolygonsByClass = new HashMap<ClassType, List<Polygon>>();
-    {
-      final Queue<Map.Entry<ClassType, List<List<Geometry>>>> queue = new ConcurrentLinkedQueue<Map.Entry<ClassType, List<List<Geometry>>>>(mergedAdjacentRegionsByClass.entrySet());
+
+    for (Map.Entry<ClassType, List<List<Geometry>>> entry : mergedAdjacentRegionsByClass.entrySet()) {
+
+      long timer = System.currentTimeMillis();
+
+      int count = 0;
+      for (List<Geometry> regions : entry.getValue()) {
+        count += regions.size();
+      }
+      log.debug("Union " + entry.getKey() + " with " + entry.getValue().size() + " regions, or a total of " + count + " polygons.");
+
+      final List<Polygon> unions = new ArrayList<Polygon>();
+
+      final Queue<List<Geometry>> queue = new ConcurrentLinkedQueue<List<Geometry>>(entry.getValue());
 
       Thread[] threads = new Thread[numberOfThreads];
-
       for (int i = 0; i < threads.length; i++) {
         Thread thread = new Thread(new Runnable() {
           @Override
           public void run() {
-            Map.Entry<ClassType, List<List<Geometry>>> entry;
-            while ((entry = queue.poll()) != null) {
+            List<Geometry> region;
+            while ((region = queue.poll()) != null) {
 
-              long timer = System.currentTimeMillis();
+              List<Polygon> unionFactory = new ArrayList<Polygon>(region.size());
 
-              log.debug("Union " + entry.getKey());
-
-              List<Polygon> unions = new ArrayList<Polygon>();
-
-              for (List<Geometry> regions : entry.getValue()) {
-
-                List<Polygon> unionFactory = new ArrayList<Polygon>(entry.getValue().size());
-
-                for (Geometry region : regions) {
-                  unionFactory.add((Polygon) region);
-                }
-
-                Geometry union = factory.buildGeometry(unionFactory).buffer(0);
-
-                if (union instanceof MultiPolygon) {
-                  MultiPolygon multiPolygon = (MultiPolygon) union;
-                  for (int geometryIndex = 0; geometryIndex < multiPolygon.getNumGeometries(); geometryIndex++) {
-                    Geometry geometry = multiPolygon.getGeometryN(geometryIndex);
-                    if (geometry instanceof Polygon) {
-                      unions.add((Polygon) geometry);
-                    } else {
-                      throw new RuntimeException("Not implemented! " + union.getClass().getName());
-                    }
-                  }
-                } else if (union instanceof Polygon) {
-                  unions.add((Polygon) union);
-
-                } else {
-                  throw new RuntimeException("Not implemented! " + union.getClass().getName());
-                }
-
+              for (Geometry polygon : region) {
+                unionFactory.add((Polygon) polygon);
               }
 
-              timer = System.currentTimeMillis() - timer;
-              log.debug("Union " + entry.getKey() + " in " + timer + " ms");
+              Geometry union = factory.buildGeometry(unionFactory).buffer(0);
 
-              unionPolygonsByClass.put(entry.getKey(), unions);
+              if (union instanceof MultiPolygon) {
+                MultiPolygon multiPolygon = (MultiPolygon) union;
+                for (int geometryIndex = 0; geometryIndex < multiPolygon.getNumGeometries(); geometryIndex++) {
+                  Geometry geometry = multiPolygon.getGeometryN(geometryIndex);
+                  if (geometry instanceof Polygon) {
+                    unions.add((Polygon) geometry);
+                  } else {
+                    throw new RuntimeException("Not implemented! " + union.getClass().getName());
+                  }
+                }
+              } else if (union instanceof Polygon) {
+                unions.add((Polygon) union);
+
+              } else {
+                throw new RuntimeException("Not implemented! " + union.getClass().getName());
+              }
 
             }
           }
@@ -351,8 +347,13 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
         thread.join();
       }
 
+      timer = System.currentTimeMillis() - timer;
+      log.debug("Union " + entry.getKey() + " in " + timer + " ms");
+
+      unionPolygonsByClass.put(entry.getKey(), unions);
 
     }
+
 
     return unionPolygonsByClass;
 
