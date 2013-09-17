@@ -12,21 +12,26 @@ import java.util.Date;
  */
 public class OsmXmlTimestampFormat extends DateFormat {
 
-  private static final String format = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+  private static final String format1 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+  private static final String format2 = "yyyy-MM-dd'T'HH:mm:ss";
 
-  private DateFormat implementation;
+  private DateFormat implementation1;
+  private DateFormat implementation2;
 
   public OsmXmlTimestampFormat() {
-    implementation = new SimpleDateFormat(format);
+    implementation1 = new SimpleDateFormat(format1);
+    implementation2 = new SimpleDateFormat(format2);
   }
 
   @Override
   public StringBuffer format(Date date, StringBuffer stringBuffer, FieldPosition fieldPosition) {
-    return implementation.format(date, stringBuffer, fieldPosition);
+    return implementation1.format(date, stringBuffer, fieldPosition);
   }
 
   @Override
   public Date parse(String s, ParsePosition parsePosition) {
-    return implementation.parse(s, parsePosition);
+	  if (s.length() - parsePosition.getIndex() == format1.length())
+		 return implementation1.parse(s, parsePosition); 
+    return implementation2.parse(s, parsePosition);
   }
 }
