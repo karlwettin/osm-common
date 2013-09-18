@@ -35,12 +35,14 @@ public class TestOverpass extends OsmCommonTest {
             "  <print/>\n" +
             "</osm-script>")));
 
-    overpass.loadAllObjects(root);
+    OverpassUtils overpassUtils = new OverpassUtils(overpass);
+
+    overpassUtils.loadAllObjects(root);
 
 
-    Node halmstad = overpass.getNode(1594669682l);
-    Way magnusStenbocksVäg = overpass.loadWay(43153974l);
-    Relation sweden = overpass.loadRelation(52822l);
+    Node halmstad = overpassUtils.getNode(1594669682l);
+    Way magnusStenbocksVäg = overpassUtils.loadWay(43153974l);
+    Relation sweden = overpassUtils.loadRelation(52822l);
 
     System.currentTimeMillis();
 
