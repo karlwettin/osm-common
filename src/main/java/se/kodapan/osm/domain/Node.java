@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * @author kalle
+ * @author Sebastian Pretzsch
  * @since 2013-05-01 15:42
  */
 public class Node extends OsmObject implements Serializable {
@@ -80,4 +81,37 @@ public class Node extends OsmObject implements Serializable {
         ", waysMemberships.size=" + (waysMemberships == null ? "null" : waysMemberships.size()) +
         '}';
   }
+
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	long temp;
+	temp = Double.doubleToLongBits(latitude);
+	result = prime * result + (int) (temp ^ (temp >>> 32));
+	temp = Double.doubleToLongBits(longitude);
+	result = prime * result + (int) (temp ^ (temp >>> 32));
+	return result;
+}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Node other = (Node) obj;
+		if (Double.doubleToLongBits(latitude) != Double
+				.doubleToLongBits(other.latitude))
+			return false;
+		if (Double.doubleToLongBits(longitude) != Double
+				.doubleToLongBits(other.longitude))
+			return false;
+		return true;
+	}
+  
+  
+  
 }
