@@ -51,15 +51,17 @@ public class TestFileSystemCachedOverpass extends OsmCommonTest {
 
     overpass.open();
 
+    OverpassUtils overpassUtils = new OverpassUtils(overpass);
+
     assertEquals(0, getCachedIndex);
     assertEquals(0, setCachedIndex);
 
-    Node first = overpass.getNode(561366406l);
+    Node first = overpassUtils.getNode(561366406l);
 
     assertEquals(1, getCachedIndex);
     assertEquals(1, setCachedIndex);
 
-    Node second = overpass.getNode(561366406l);
+    Node second = overpassUtils.getNode(561366406l);
     assertEquals(2, getCachedIndex);
     assertEquals(1, setCachedIndex);
 

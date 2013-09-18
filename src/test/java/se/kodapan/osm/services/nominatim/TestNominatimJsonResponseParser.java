@@ -3,6 +3,7 @@ package se.kodapan.osm.services.nominatim;
 import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.services.nominatim.NominatimJsonResponseParser.Result;
 import se.kodapan.osm.services.overpass.Overpass;
+import se.kodapan.osm.services.overpass.OverpassUtils;
 
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class TestNominatimJsonResponseParser extends OsmCommonTest {
 
     Overpass overpass = new Overpass();
     setUserAgent(overpass);
-    overpass.loadAllObjects(parser.getRoot());
 
+    OverpassUtils overpassUtils = new OverpassUtils(overpass);
 
-    System.currentTimeMillis();
+    overpassUtils.loadAllObjects(parser.getRoot());
 
   }
 
