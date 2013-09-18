@@ -22,6 +22,8 @@ public class Tile {
   }
 
   private double evaluateLatitude(int y, int z) {
+    // todo is this really correct? TMS and WMS use different y values!
+    // todo perhaps this is something that belongs in SlippyMap-implementations.
     double n = Math.PI - (2.0 * Math.PI * y) / Math.pow(2.0, z);
     return Math.toDegrees(Math.atan(Math.sinh(n)));
   }
