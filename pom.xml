@@ -5,7 +5,7 @@
 
     <groupId>se.kodapan.osm</groupId>
     <artifactId>osm-common</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
