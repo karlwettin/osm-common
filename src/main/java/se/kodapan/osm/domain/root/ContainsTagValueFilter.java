@@ -3,6 +3,8 @@ package se.kodapan.osm.domain.root;
 import se.kodapan.osm.domain.*;
 
 /**
+ * Returns object containing any tag key matching a given tag value.
+ *
  * @author kalle
  * @since 2013-07-27 21:42
  */

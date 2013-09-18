@@ -144,7 +144,7 @@ public class Root implements Serializable {
     }
     return nodes;
   }
-
+  /** todo this loop get really slow where there is hundreds of thousands of coordinates and as many calls to the method... index? */
   public Node findFirstNodeByLatitudeAndLongitude(double latitude, double longitude) {
     for (Node node : getNodes().values()) {
       if (node.getLatitude() == latitude && node.getLongitude() == longitude) {

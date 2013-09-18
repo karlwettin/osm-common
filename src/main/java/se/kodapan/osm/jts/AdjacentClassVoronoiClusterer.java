@@ -495,7 +495,7 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
     private void addNodesToWay(Root root, Map.Entry<ClassType, List<Polygon>> entry, Polygon geometry, Polygon polygon, Way innerWay) {
       for (Coordinate coordinate : polygon.getExteriorRing().getCoordinates()) {
-        Node node = root.findFirstNodeByLatitudeAndLongitude(coordinate.y, coordinate.x);
+        Node node = null; // todo see method.. slow.. root.findFirstNodeByLatitudeAndLongitude(coordinate.y, coordinate.x);
         if (node == null) {
           node = new Node();
           node.setId(identity--);

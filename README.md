@@ -8,6 +8,7 @@ Best documentation is found in test cases.
 
 API mainly include support for Nominatim, Overpass, changeset stores and osm.xml-parsing.
 
+```
 /** RAM-store for keeping track of OSM objects */
 se.kodapan.osm.domain:Root
   #get(id):OsmObject
@@ -65,6 +66,8 @@ se.kodapan.osm.services.nominatim:NominatimQueryBuilder
   #addCountryCode(iso)
   #setLimit(limit)
   ...
+```
 
 
-There is also a bit of tools surrounding this API such as filters to remove matching OsmObjects from a collection, minor distance metrics and such.
+There is also a bit of tools surrounding this API such as filters to remove matching OsmObjects from a collection,
+distance metrics and such.

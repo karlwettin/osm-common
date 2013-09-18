@@ -1,6 +1,8 @@
 package se.kodapan.osm.geo.distance;
 
 /**
+ * Euclidean squared distance metrics.
+ *
  * @author kalle
  * @since 2013-07-29 15:19
  */

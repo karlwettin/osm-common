@@ -6,6 +6,8 @@ import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
 
 /**
+ * Returns the negated values of a decorated filter.
+ *
 * @author kalle
 * @since 2013-07-27 21:42
 */

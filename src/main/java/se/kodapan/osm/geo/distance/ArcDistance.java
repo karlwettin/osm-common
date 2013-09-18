@@ -9,6 +9,10 @@ import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.jts.LineInterpolation;
 
 /**
+ * True arc distance metrics, returning distance between coordinates in kilometers.
+ *
+ * Based on code available in org.apache.lucene.spatial.base.LatLng.
+ *
  * @author kalle
  * @since 2013-07-29 15:20
  */
@@ -21,7 +25,7 @@ public class ArcDistance  extends Distance {
   public double calculate(Polygon polygon, Coordinate coordinate, double precisionKilometers, GeometryFactory geometryFactory) {
     Point point = new Point(new CoordinateArraySequence(new Coordinate[]{coordinate}), geometryFactory);
     if (polygon.contains(point)) {
-      // todo distance to border?
+      // todo distance to border? well if that should be the case then factor this method out of this class!
       return 0;
     }
 
