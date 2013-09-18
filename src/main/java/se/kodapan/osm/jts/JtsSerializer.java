@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Java serialization tool for JTS shapes.
+ *
+ * Currently only support polygons.
+ *
  * @author kalle
  * @since 2013-09-09 6:06 PM
  */

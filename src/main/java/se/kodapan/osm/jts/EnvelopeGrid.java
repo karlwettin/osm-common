@@ -6,6 +6,8 @@ import se.kodapan.osm.geo.distance.ArcDistance;
 import java.io.Serializable;
 
 /**
+ * Creates a grid of envelopes around a diagonal of a centroid coordinate.
+ *
  * @author kalle
  * @since 2013-09-05 12:40 AM
  */
