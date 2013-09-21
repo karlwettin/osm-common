@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-      <groupId>se.kodapan.osm</groupId>
-      <artifactId>osm-common-parent</artifactId>
+      <groupId>se.kodapan.osm.common</groupId>
+      <artifactId>common-parent</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>osm-common-core</artifactId>
+    <artifactId>core</artifactId>
     <version>${parent.version}</version>
 
     <packaging>jar</packaging>
