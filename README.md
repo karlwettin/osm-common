@@ -24,19 +24,19 @@ se.kodapan.osm.domain:Way extends OsmObject
 se.kodapan.osm.domain:Relation extends OsmObject
 
 /** Create, update and delete OSM objects in a Root based on the content of an .osm.xml  */
-se.kodapan.osm.data.planet.parser.xml.instantiated:InstantiatedOsmXmlParser
+se.kodapan.osm.parser.xml.instantiated:InstantiatedOsmXmlParser
  #setRoot(root)
  #read(xml)
 
 /** Streaming API for processing those TB-sized osm.xml-files */
-se.kodapan.osm.data.planet.parser.xml.streaming:StreamingOsmXmlParser
+se.kodapan.osm.parser.xml.streaming:StreamingOsmXmlParser
   #read(xml)
   #processParsedNode(node)
   #processParsedWay(way)
   #processParsedRelation(relation)
 
 
-se.kodapan.osm.data.planet.changesetstore:ChangesetStore
+se.kodapan.osm.services.changesetstore:ChangesetStore
   #setBaseUrl()
   #findFirstChangesetStateSince(timestamp)
   #findChangesetStatesSince(timestamp)

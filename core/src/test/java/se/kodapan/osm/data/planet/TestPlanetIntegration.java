@@ -9,9 +9,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.osm.data.planet.changesetstore.ChangesetStore;
-import se.kodapan.osm.data.planet.changesetstore.ChangesetStoreState;
-import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser;
+import se.kodapan.osm.services.changesetstore.ChangesetStore;
+import se.kodapan.osm.services.changesetstore.ChangesetStoreState;
+import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

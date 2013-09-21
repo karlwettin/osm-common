@@ -6,7 +6,7 @@ import se.kodapan.osm.domain.*;
 * @author kalle
 * @since 2013-07-27 21:42
 */
-public abstract  class AbstractTagFilter implements OsmObjectVisitor<Boolean> {
+public abstract class AbstractTagFilter implements OsmObjectVisitor<Boolean> {
 
 
   public abstract Boolean visit(OsmObject tagged);

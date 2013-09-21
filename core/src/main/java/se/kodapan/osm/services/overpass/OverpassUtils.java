@@ -1,7 +1,7 @@
 package se.kodapan.osm.services.overpass;
 
-import se.kodapan.osm.data.planet.parser.xml.OsmXmlParserException;
-import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser;
+import se.kodapan.osm.parser.xml.OsmXmlParserException;
+import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.domain.root.Root;
 

@@ -15,15 +15,13 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.osm.data.planet.parser.xml.OsmXmlParserException;
-import se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser;
+import se.kodapan.osm.parser.xml.OsmXmlParserException;
+import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.domain.root.Root;
 
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.io.StringWriter;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -160,7 +158,7 @@ public class Overpass {
   /**
    * Will be removed in version 0.0.1
    *
-   * @deprecated use {@link OverpassUtils#loadObjects(se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser, java.util.Collection)}
+   * @deprecated use {@link OverpassUtils#loadObjects(se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser, java.util.Collection)}
    */
   @Deprecated
   public void loadObjects(InstantiatedOsmXmlParser parser, Collection<? extends OsmObject> osmObjects) throws OverpassException, OsmXmlParserException {
@@ -170,7 +168,7 @@ public class Overpass {
   /**
    * Will be removed in version 0.0.1
    *
-   * @deprecated use {@link OverpassUtils#loadNode(se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser, long)}
+   * @deprecated use {@link OverpassUtils#loadNode(se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser, long)}
    */
   @Deprecated
   public Node loadNode(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
@@ -190,7 +188,7 @@ public class Overpass {
   /**
    * Will be removed in version 0.0.1
    *
-   * @deprecated use {@link OverpassUtils#loadWay(se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser, long)}
+   * @deprecated use {@link OverpassUtils#loadWay(se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser, long)}
    */
   @Deprecated
   public Way loadWay(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
@@ -211,7 +209,7 @@ public class Overpass {
   /**
    * Will be removed in version 0.0.1
    *
-   * @deprecated use {@link OverpassUtils#loadRelation(se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser, long)}
+   * @deprecated use {@link OverpassUtils#loadRelation(se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser, long)}
    */
   @Deprecated
   public Relation loadRelation(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
@@ -222,7 +220,7 @@ public class Overpass {
   /**
    * Will be removed in version 0.0.1
    *
-   * @deprecated use {@link OverpassUtils#loadEnvelope(se.kodapan.osm.data.planet.parser.xml.instantiated.InstantiatedOsmXmlParser, double, double, double, double)}
+   * @deprecated use {@link OverpassUtils#loadEnvelope(se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser, double, double, double, double)}
    */
   @Deprecated
   public void loadEnvelope(InstantiatedOsmXmlParser parser, double latitudeSouth, double longitudeWest, double latitudeNorth, double longitudeEast) throws OverpassException, OsmXmlParserException {

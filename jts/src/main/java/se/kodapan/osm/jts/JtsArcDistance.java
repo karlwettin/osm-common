@@ -6,7 +6,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.geo.distance.ArcDistance;
+import se.kodapan.osm.util.distance.ArcDistance;
 
 /**
  * @author kalle

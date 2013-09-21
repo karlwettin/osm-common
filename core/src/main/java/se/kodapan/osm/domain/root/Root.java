@@ -111,7 +111,8 @@ public class Root implements Serializable {
     return filter(gatherAllOsmObjects(), filter);
 
   }
-/**
+
+  /**
    * @param filter returns true if instance is to be removed from results
    * @return
    */
@@ -144,7 +145,13 @@ public class Root implements Serializable {
     }
     return nodes;
   }
-  /** todo this loop get really slow where there is hundreds of thousands of coordinates and as many calls to the method... index? */
+
+  /**
+   * todo this loop get really slow where there is hundreds of thousands of coordinates and as many calls to the method... index?
+   * todo if an index then it needs to be up to date when node values change. that requires keeping track of root from osmobjects....
+   * todo and what if the object is added to multiple roots then?
+   * todo so an index is probably not possible.
+   */
   public Node findFirstNodeByLatitudeAndLongitude(double latitude, double longitude) {
     for (Node node : getNodes().values()) {
       if (node.getLatitude() == latitude && node.getLongitude() == longitude) {

@@ -3,8 +3,8 @@ package se.kodapan.osm.jts;
 import com.vividsolutions.jts.geom.Coordinate;
 import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.geo.distance.ArcDistance;
-import se.kodapan.osm.geo.distance.Distance;
+import se.kodapan.osm.util.distance.ArcDistance;
+import se.kodapan.osm.util.distance.Distance;
 
 import java.util.ArrayList;
 import java.util.List;

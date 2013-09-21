@@ -1,7 +1,7 @@
 package se.kodapan.osm.jts;
 
 import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.geo.distance.ArcDistance;
+import se.kodapan.osm.util.distance.ArcDistance;
 
 import java.io.Serializable;
 
