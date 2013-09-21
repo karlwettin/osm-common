@@ -1,6 +1,7 @@
 package se.kodapan.osm;
 
 import junit.framework.TestCase;
+import se.kodapan.osm.services.HttpService;
 import se.kodapan.osm.services.nominatim.Nominatim;
 import se.kodapan.osm.services.overpass.Overpass;
 
@@ -10,12 +11,8 @@ import se.kodapan.osm.services.overpass.Overpass;
  */
 public abstract class OsmCommonTest extends TestCase {
 
-  public void setUserAgent(Nominatim nominatim) {
-    nominatim.setUserAgent("test suite of <https://github.com/karlwettin/osm-common/>");
-  }
-
-  public void setUserAgent(Overpass overpass) {
-    overpass.setUserAgent("test suite of <https://github.com/karlwettin/osm-common/>");
+  public void setUserAgent(HttpService service) {
+    service.setUserAgent("test suite of <https://github.com/karlwettin/osm-common/>");
   }
 
 }

@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kodapan.osm.services.HttpService;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -26,11 +27,10 @@ import java.util.zip.GZIPInputStream;
  * @author kalle
  * @since 2013-05-03 20:07
  */
-public class ChangesetStore {
+public class ChangesetStore extends HttpService {
 
   private static Logger log = LoggerFactory.getLogger(ChangesetStore.class);
 
-  private HttpClient httpClient = new DefaultHttpClient();
   private URL baseURL;
 
   /**
@@ -72,7 +72,8 @@ public class ChangesetStore {
     log.info("Downloading " + url);
 
     HttpGet get = new HttpGet(url.toString());
-    HttpResponse httpResponse = httpClient.execute(get);
+    HttpResponse httpResponse = getHttpClient().execute(get);
+    setUserAgent(get);
 
     if (httpResponse.getStatusLine().getStatusCode() != 200) {
       log.info("HTTP " + httpResponse.getStatusLine().getStatusCode() + " for " + url.toString());
@@ -156,7 +157,9 @@ public class ChangesetStore {
   public ChangesetStoreState parseChangesetState(URL url) throws Exception {
 
     HttpGet get = new HttpGet(url.toString());
-    HttpResponse httpResponse = httpClient.execute(get);
+    setUserAgent(get);
+    HttpResponse httpResponse = getHttpClient().execute(get);
+
 
     if (httpResponse.getStatusLine().getStatusCode() != 200) {
       log.info("HTTP " + httpResponse.getStatusLine().getStatusCode() + " for " + url.toString());
@@ -281,11 +284,4 @@ public class ChangesetStore {
     return states;
   }
 
-  public HttpClient getHttpClient() {
-    return httpClient;
-  }
-
-  public void setHttpClient(HttpClient httpClient) {
-    this.httpClient = httpClient;
-  }
 }

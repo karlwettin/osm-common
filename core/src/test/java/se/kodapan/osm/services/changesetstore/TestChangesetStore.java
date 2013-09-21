@@ -1,6 +1,7 @@
 package se.kodapan.osm.services.changesetstore;
 
 import junit.framework.TestCase;
+import se.kodapan.osm.OsmCommonTest;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -12,10 +13,12 @@ import java.util.List;
  * @author kalle
  * @since 2013-05-03 20:27
  */
-public class TestChangesetStore extends TestCase {
+public class TestChangesetStore extends OsmCommonTest {
 
   public void testGetFirstChangesetStateSince() throws Exception {
     ChangesetStore store = new ChangesetStore();
+    setUserAgent(store);
+    store.open();
     store.setBaseURL("http://download.geofabrik.de/europe/sweden-updates");
 
     ChangesetStoreState mostRecentChangesetState = store.getMostRecentChangesetState();
@@ -40,6 +43,8 @@ public class TestChangesetStore extends TestCase {
 
   public void testGetChangesetStatesSince() throws Exception {
     ChangesetStore store = new ChangesetStore();
+    setUserAgent(store);
+    store.open();
     store.setBaseURL("http://download.geofabrik.de/europe/sweden-updates");
 
     ChangesetStoreState mostRecentChangesetState = store.getMostRecentChangesetState();
@@ -64,6 +69,8 @@ public class TestChangesetStore extends TestCase {
 
   public void testGetMostRecentChangesetState() throws Exception {
     ChangesetStore store = new ChangesetStore();
+    store.open();
+    setUserAgent(store);
     store.setBaseURL("http://download.geofabrik.de/europe/sweden-updates");
     ChangesetStoreState state = store.getMostRecentChangesetState();
     Reader changesetReader = store.getChangeset(state.getSequenceNumber());
@@ -77,6 +84,8 @@ public class TestChangesetStore extends TestCase {
 
   public void testParseState() throws Exception {
     ChangesetStore store = new ChangesetStore();
+    store.open();
+    setUserAgent(store);
     StringBuilder stateBuilder = new StringBuilder();
     stateBuilder.append("#this is a comment\n");
     stateBuilder.append("sequenceNumber=1\n");
@@ -100,6 +109,8 @@ public class TestChangesetStore extends TestCase {
   public void testGetChangesetURL() throws Exception {
 
     ChangesetStore store = new ChangesetStore();
+    store.open();
+    setUserAgent(store);
     store.setBaseURL("http://foo/");
     assertEquals(new URL("http://foo/000/000/000.osc.gz"), store.getChangesetURL(0));
     assertEquals(new URL("http://foo/000/000/100.osc.gz"), store.getChangesetURL(100));
@@ -111,6 +122,8 @@ public class TestChangesetStore extends TestCase {
   public void testGetStateURL() throws Exception {
 
     ChangesetStore store = new ChangesetStore();
+    store.open();
+    setUserAgent(store);
     store.setBaseURL("http://foo/");
     assertEquals(new URL("http://foo/000/000/000.state.txt"), store.getChangesetStateURL(0));
     assertEquals(new URL("http://foo/000/000/100.state.txt"), store.getChangesetStateURL(100));
@@ -122,6 +135,8 @@ public class TestChangesetStore extends TestCase {
   public void testSetBaseURL() throws Exception {
 
     ChangesetStore store = new ChangesetStore();
+    store.open();
+    setUserAgent(store);
     store.setBaseURL("http://foo/");
     assertEquals(new URL("http://foo/"), store.getBaseURL());
 

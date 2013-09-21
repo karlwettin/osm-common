@@ -19,6 +19,7 @@ import se.kodapan.osm.parser.xml.OsmXmlParserException;
 import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.services.HttpService;
 
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -30,32 +31,11 @@ import java.util.List;
  * @author kalle
  * @since 2012-12-31 16:32
  */
-public class Overpass {
+public class Overpass extends HttpService {
 
   private static Logger log = LoggerFactory.getLogger(Overpass.class);
 
-  private long minimumMillisecondsDelayBetweenRequests = 0;
-  private long previousRequestTimestamp = 0;
-
-  private ClientConnectionManager cm;
-  private HttpClient httpClient;
-
-  private static String defaultUserAgent = "Unnamed instance of " + Overpass.class.getName() + ", https://github.com/karlwettin/osm-common/";
-  private String userAgent = defaultUserAgent;
-
   private String serverURL = "http://www.overpass-api.de/api/interpreter";
-
-  public void open() throws Exception {
-    SchemeRegistry schemeRegistry = new SchemeRegistry();
-    schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-
-    cm = new ThreadSafeClientConnManager(schemeRegistry);
-    httpClient = new DefaultHttpClient(cm);
-  }
-
-  public void close() throws Exception {
-
-  }
 
   public String execute(String overpassQuery) throws OverpassException {
     return execute(overpassQuery, null);
@@ -73,28 +53,21 @@ public class Overpass {
   public String execute(String overpassQuery, String queryDescription) throws OverpassException {
 
     try {
-      if (defaultUserAgent.equals(userAgent)) {
-        throw new NullPointerException("Overpass HTTP header User-Agent not set!");
-      }
 
       HttpPost post = new HttpPost(serverURL);
-      post.setHeader("User-Agent", userAgent);
+      setUserAgent(post);
 
       List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
       nameValuePairs.add(new BasicNameValuePair("data", overpassQuery));
       post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 
-      long sleep;
-      while ((sleep = previousRequestTimestamp + minimumMillisecondsDelayBetweenRequests - System.currentTimeMillis()) > 0) {
-        Thread.sleep(sleep);
-      }
-      previousRequestTimestamp = System.currentTimeMillis();
+      leniency();
 
       log.debug("Executing overpass query: " + queryDescription + "\n" + overpassQuery);
 
       long started = System.currentTimeMillis();
-      HttpResponse response = httpClient.execute(post);
+      HttpResponse response = getHttpClient().execute(post);
 
       StringWriter buffer = new StringWriter();
       IOUtils.copy(new InputStreamReader(response.getEntity().getContent(), "utf8"), buffer);
@@ -122,14 +95,6 @@ public class Overpass {
 
   public void setServerURL(String serverURL) {
     this.serverURL = serverURL;
-  }
-
-  public String getUserAgent() {
-    return userAgent;
-  }
-
-  public void setUserAgent(String userAgent) {
-    this.userAgent = userAgent;
   }
 
 
