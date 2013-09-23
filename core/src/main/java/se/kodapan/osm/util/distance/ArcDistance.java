@@ -10,8 +10,6 @@ package se.kodapan.osm.util.distance;
  */
 public class ArcDistance  extends Distance {
 
-
-
   /**
    * copied from org.apache.lucene.spatial.base.LatLng
    * @param latitudeA
