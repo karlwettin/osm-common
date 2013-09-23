@@ -9,6 +9,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.services.changesetstore.ChangesetStore;
 import se.kodapan.osm.services.changesetstore.ChangesetStoreState;
 import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
@@ -29,7 +30,7 @@ import java.util.Date;
  * @author kalle
  * @since 2013-05-04 15:05
  */
-public class TestPlanetIntegration extends TestCase {
+public class TestPlanetIntegration extends OsmCommonTest {
 
   private static Logger log = LoggerFactory.getLogger(TestPlanetIntegration.class);
 
@@ -77,6 +78,7 @@ public class TestPlanetIntegration extends TestCase {
 
 
     ChangesetStore changesetStore = new ChangesetStore();
+    setUserAgent(changesetStore);
     changesetStore.setBaseURL("http://download.geofabrik.de/europe/malta-updates");
     changesetStore.setHttpClient(httpClient);
 

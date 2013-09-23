@@ -29,6 +29,9 @@ public class InstantiatedOsmXmlParser {
 
   private static final Logger log = LoggerFactory.getLogger(InstantiatedOsmXmlParser.class);
 
+  /** if false, OSM objects with a version greater than +1 of the current object in root will throw an exception. */
+  private boolean allowingMissingVersions = true;
+
   private OsmXmlTimestampFormat timestampFormat = new OsmXmlTimestampFormat();
 
   private Root root = new Root();
@@ -142,8 +145,11 @@ public class InstantiatedOsmXmlParser {
               log.warn("Inconsistency, old version detected during modify node.");
               skipCurrentObject = true;
               continue;
-            } else if (version > currentNode.getVersion() + 1) {
+            } else if (version > currentNode.getVersion() + 1 && !isAllowingMissingVersions()) {
               throw new OsmXmlParserException("Inconsistency, version " + version + " too great to modify node " + currentNode.getId() + " with version " + currentNode.getVersion());
+            } else if (version.equals(currentNode.getVersion())) {
+              throw new OsmXmlParserException("Inconsistency, found same version in new data during modify node.");
+
             }
 
             currentNode.setTags(null);
@@ -173,7 +179,7 @@ public class InstantiatedOsmXmlParser {
               log.warn("Inconsistency, old version detected during delete node.");
               skipCurrentObject = true;
               continue;
-            } else if (version > nodeToRemove.getVersion() + 1) {
+            } else if (version > nodeToRemove.getVersion() + 1 && !isAllowingMissingVersions()) {
               throw new OsmXmlParserException("Inconsistency, too great version found during delete node.");
             }
 
@@ -254,8 +260,10 @@ public class InstantiatedOsmXmlParser {
               log.warn("Inconsistency, old version detected during modify way.");
               skipCurrentObject = true;
               continue;
-            } else if (version > currentWay.getVersion() + 1) {
+            } else if (version > currentWay.getVersion() + 1 && !isAllowingMissingVersions()) {
               throw new OsmXmlParserException("Inconsistency, found too great version in new data during modify way.");
+            } else if (version.equals(currentWay.getVersion())) {
+              throw new OsmXmlParserException("Inconsistency, found same version in new data during modify way.");
             }
 
 
@@ -291,7 +299,7 @@ public class InstantiatedOsmXmlParser {
               log.warn("Inconsistency, old version detected during delete way.");
               skipCurrentObject = true;
               continue;
-            } else if (version > wayToRemove.getVersion() + 1) {
+            } else if (version > wayToRemove.getVersion() + 1 && !isAllowingMissingVersions()) {
               throw new OsmXmlParserException("Inconsistency, too great way version found during delete way.");
             }
 
@@ -403,8 +411,10 @@ public class InstantiatedOsmXmlParser {
               log.warn("Inconsistency, old version detected during modify relation.");
               skipCurrentObject = true;
               continue;
-            } else if (version > currentRelation.getVersion() + 1) {
+            } else if (version > currentRelation.getVersion() + 1 && !isAllowingMissingVersions()) {
               throw new OsmXmlParserException("Inconsistency, too great version found during modify relation.");
+            } else if (version.equals(currentRelation.getVersion())) {
+              throw new OsmXmlParserException("Inconsistency, same version found during modify relation.");
             }
 
             if (currentRelation.getMembers() != null) {
@@ -441,7 +451,7 @@ public class InstantiatedOsmXmlParser {
               log.warn("Inconsistency, old version detected during delete relation.");
               skipCurrentObject = true;
               continue;
-            } else if (version > relationToRemove.getVersion() + 1) {
+            } else if (version > relationToRemove.getVersion() + 1 && !isAllowingMissingVersions()) {
               throw new OsmXmlParserException("Inconsistency, too great version found during delete relation.");
             }
 
@@ -680,5 +690,12 @@ public class InstantiatedOsmXmlParser {
     this.root = root;
   }
 
+  public boolean isAllowingMissingVersions() {
+    return allowingMissingVersions;
+  }
+
+  public void setAllowingMissingVersions(boolean allowingMissingVersions) {
+    this.allowingMissingVersions = allowingMissingVersions;
+  }
 }
 
