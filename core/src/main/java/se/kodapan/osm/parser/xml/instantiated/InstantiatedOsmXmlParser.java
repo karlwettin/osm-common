@@ -130,7 +130,7 @@ public class InstantiatedOsmXmlParser {
 
             current = currentNode;
 
-            delta.getCreatedNodeIdentities().add(identity);
+            delta.getCreatedNodes().add(currentNode);
 
           } else if (state == State.modify) {
 
@@ -162,7 +162,7 @@ public class InstantiatedOsmXmlParser {
 
             current = currentNode;
 
-            delta.getModifiedNodeIdentities().add(identity);
+            delta.getModifiedNodes().add(currentNode);
 
           } else if (state == State.delete) {
 
@@ -200,7 +200,7 @@ public class InstantiatedOsmXmlParser {
 
             Node removedNode = root.getNodes().remove(identity);
 
-            delta.getDeletedNodeIdentities().add(identity);
+            delta.getDeletedNodes().add(removedNode);
           }
 
         } else if ("way".equals(xmlr.getLocalName())) {
@@ -245,7 +245,7 @@ public class InstantiatedOsmXmlParser {
 
             current = currentWay;
 
-            delta.getCreatedWayIdentities().add(identity);
+            delta.getCreatedWays().add(currentWay);
 
           } else if (state == State.modify) {
 
@@ -281,7 +281,7 @@ public class InstantiatedOsmXmlParser {
 
             current = currentWay;
 
-            delta.getModifiedWayIdentities().add(identity);
+            delta.getModifiedWays().add(currentWay);
 
 
           } else if (state == State.delete) {
@@ -320,7 +320,7 @@ public class InstantiatedOsmXmlParser {
 
             Way removedWay = root.getWays().remove(identity);
 
-            delta.getDeletedWayIdentities().add(identity);
+            delta.getDeletedWays().add(removedWay);
 
           }
 
@@ -397,7 +397,7 @@ public class InstantiatedOsmXmlParser {
 
             current = currentRelation;
 
-            delta.getCreatedRelationIdentities().add(identity);
+            delta.getCreatedRelations().add(currentRelation);
 
           } else if (state == State.modify) {
 
@@ -434,7 +434,7 @@ public class InstantiatedOsmXmlParser {
 
             parseObjectAttributes(xmlr, currentRelation, "id");
 
-            delta.getModifiedRelationIdentities().add(identity);
+            delta.getModifiedRelations().add(currentRelation);
 
           } else if (state == State.delete) {
 
@@ -467,7 +467,7 @@ public class InstantiatedOsmXmlParser {
 
             Relation removedRelation = root.getRelations().remove(identity);
 
-            delta.getDeletedRelationIdentities().add(identity);
+            delta.getDeletedRelations().add(removedRelation);
           }
 
 
@@ -596,17 +596,17 @@ public class InstantiatedOsmXmlParser {
     log.debug("Done parsing.");
 
     log.debug("Delta "
-        + delta.getCreatedNodeIdentities().size() + "/"
-        + delta.getModifiedNodeIdentities().size() + "/"
-        + delta.getDeletedNodeIdentities().size() + " nodes, "
+        + delta.getCreatedNodes().size() + "/"
+        + delta.getModifiedNodes().size() + "/"
+        + delta.getDeletedNodes().size() + " nodes, "
 
-        + delta.getCreatedWayIdentities().size() + "/"
-        + delta.getModifiedWayIdentities().size() + "/"
-        + delta.getDeletedWayIdentities().size() + " ways, "
+        + delta.getCreatedWays().size() + "/"
+        + delta.getModifiedWays().size() + "/"
+        + delta.getDeletedWays().size() + " ways, "
 
-        + delta.getCreatedRelationIdentities().size() + "/"
-        + delta.getModifiedRelationIdentities().size() + "/"
-        + delta.getDeletedRelationIdentities().size() + " relations created/modified/deleted.");
+        + delta.getCreatedRelations().size() + "/"
+        + delta.getModifiedRelations().size() + "/"
+        + delta.getDeletedRelations().size() + " relations created/modified/deleted.");
 
     long timespent = System.currentTimeMillis() - started;
 

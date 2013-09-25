@@ -1,5 +1,9 @@
 package se.kodapan.osm.parser.xml.instantiated;
 
+import se.kodapan.osm.domain.Node;
+import se.kodapan.osm.domain.Relation;
+import se.kodapan.osm.domain.Way;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,87 +13,88 @@ import java.util.Set;
  */
 public class InstantiatedOsmXmlParserDelta {
 
-  private Set<Long> createdNodeIdentities = new HashSet<Long>();
-  private Set<Long> modifiedNodeIdentities = new HashSet<Long>();
-  private Set<Long> deletedNodeIdentities = new HashSet<Long>();
+  private Set<Node> createdNodes = new HashSet<>();
+  private Set<Node> modifiedNodes = new HashSet<>();
+  private Set<Node> deletedNodes = new HashSet<>();
 
-  private Set<Long> createdWayIdentities = new HashSet<Long>();
-  private Set<Long> modifiedWayIdentities = new HashSet<Long>();
-  private Set<Long> deletedWayIdentities = new HashSet<Long>();
+  private Set<Way> createdWays = new HashSet<>();
+  private Set<Way> modifiedWays = new HashSet<>();
+  private Set<Way> deletedWays = new HashSet<>();
 
-  private Set<Long> createdRelationIdentities = new HashSet<Long>();
-  private Set<Long> modifiedRelationIdentities = new HashSet<Long>();
-  private Set<Long> deletedRelationIdentities = new HashSet<Long>();
+  private Set<Relation> createdRelations = new HashSet<>();
+  private Set<Relation> modifiedRelations = new HashSet<>();
+  private Set<Relation> deletedRelations = new HashSet<>();
 
-  public Set<Long> getCreatedNodeIdentities() {
-    return createdNodeIdentities;
+
+  public Set<Node> getCreatedNodes() {
+    return createdNodes;
   }
 
-  public void setCreatedNodeIdentities(Set<Long> createdNodeIdentities) {
-    this.createdNodeIdentities = createdNodeIdentities;
+  public void setCreatedNodes(Set<Node> createdNodes) {
+    this.createdNodes = createdNodes;
   }
 
-  public Set<Long> getModifiedNodeIdentities() {
-    return modifiedNodeIdentities;
+  public Set<Node> getModifiedNodes() {
+    return modifiedNodes;
   }
 
-  public void setModifiedNodeIdentities(Set<Long> modifiedNodeIdentities) {
-    this.modifiedNodeIdentities = modifiedNodeIdentities;
+  public void setModifiedNodes(Set<Node> modifiedNodes) {
+    this.modifiedNodes = modifiedNodes;
   }
 
-  public Set<Long> getDeletedNodeIdentities() {
-    return deletedNodeIdentities;
+  public Set<Node> getDeletedNodes() {
+    return deletedNodes;
   }
 
-  public void setDeletedNodeIdentities(Set<Long> deletedNodeIdentities) {
-    this.deletedNodeIdentities = deletedNodeIdentities;
+  public void setDeletedNodes(Set<Node> deletedNodes) {
+    this.deletedNodes = deletedNodes;
   }
 
-  public Set<Long> getCreatedWayIdentities() {
-    return createdWayIdentities;
+  public Set<Way> getCreatedWays() {
+    return createdWays;
   }
 
-  public void setCreatedWayIdentities(Set<Long> createdWayIdentities) {
-    this.createdWayIdentities = createdWayIdentities;
+  public void setCreatedWays(Set<Way> createdWays) {
+    this.createdWays = createdWays;
   }
 
-  public Set<Long> getModifiedWayIdentities() {
-    return modifiedWayIdentities;
+  public Set<Way> getModifiedWays() {
+    return modifiedWays;
   }
 
-  public void setModifiedWayIdentities(Set<Long> modifiedWayIdentities) {
-    this.modifiedWayIdentities = modifiedWayIdentities;
+  public void setModifiedWays(Set<Way> modifiedWays) {
+    this.modifiedWays = modifiedWays;
   }
 
-  public Set<Long> getDeletedWayIdentities() {
-    return deletedWayIdentities;
+  public Set<Way> getDeletedWays() {
+    return deletedWays;
   }
 
-  public void setDeletedWayIdentities(Set<Long> deletedWayIdentities) {
-    this.deletedWayIdentities = deletedWayIdentities;
+  public void setDeletedWays(Set<Way> deletedWays) {
+    this.deletedWays = deletedWays;
   }
 
-  public Set<Long> getCreatedRelationIdentities() {
-    return createdRelationIdentities;
+  public Set<Relation> getCreatedRelations() {
+    return createdRelations;
   }
 
-  public void setCreatedRelationIdentities(Set<Long> createdRelationIdentities) {
-    this.createdRelationIdentities = createdRelationIdentities;
+  public void setCreatedRelations(Set<Relation> createdRelations) {
+    this.createdRelations = createdRelations;
   }
 
-  public Set<Long> getModifiedRelationIdentities() {
-    return modifiedRelationIdentities;
+  public Set<Relation> getModifiedRelations() {
+    return modifiedRelations;
   }
 
-  public void setModifiedRelationIdentities(Set<Long> modifiedRelationIdentities) {
-    this.modifiedRelationIdentities = modifiedRelationIdentities;
+  public void setModifiedRelations(Set<Relation> modifiedRelations) {
+    this.modifiedRelations = modifiedRelations;
   }
 
-  public Set<Long> getDeletedRelationIdentities() {
-    return deletedRelationIdentities;
+  public Set<Relation> getDeletedRelations() {
+    return deletedRelations;
   }
 
-  public void setDeletedRelationIdentities(Set<Long> deletedRelationIdentities) {
-    this.deletedRelationIdentities = deletedRelationIdentities;
+  public void setDeletedRelations(Set<Relation> deletedRelations) {
+    this.deletedRelations = deletedRelations;
   }
 }
