@@ -22,7 +22,10 @@ public class Root implements Serializable {
   private Map<Long, Way> ways = new HashMap<Long, Way>();
   private Map<Long, Relation> relations = new HashMap<Long, Relation>();
 
-  private OsmObjectVisitor<Void> addVisitor = new OsmObjectVisitor<Void>() {
+  private class AddVisitor implements OsmObjectVisitor<Void>,Serializable {
+
+    private static final long serialVersionUID = 1l;
+
     @Override
     public Void visit(Node node) {
       getNodes().put(node.getId(), node);
@@ -40,7 +43,10 @@ public class Root implements Serializable {
       getRelations().put(relation.getId(), relation);
       return null;
     }
-  };
+
+  }
+
+  private OsmObjectVisitor<Void> addVisitor = new AddVisitor();
 
   public void add(OsmObject osmObject) {
     osmObject.accept(addVisitor);
