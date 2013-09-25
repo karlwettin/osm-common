@@ -2,6 +2,7 @@ package se.kodapan.osm.parser.xml.instantiated;
 
 import junit.framework.TestCase;
 
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
@@ -36,5 +37,6 @@ public class TestInstantiatedOsmXmlParser extends TestCase {
 
     System.currentTimeMillis();
   }
+
 
 }
