@@ -53,8 +53,8 @@ public class NominatimJsonResponseParser {
 
       object.setId(parseJsonDoubleValue(jsonResult, "osm_id").longValue());
       object.setTag(
-          root.getTagValueIntern().intern((String) jsonResult.get("class")),
-          root.getTagValueIntern().intern((String) jsonResult.get("type")));
+          (String) jsonResult.get("class"),
+          (String) jsonResult.get("type"));
 
       Result result = new Result(jsonResult, null);
       OsmObject existing = root.get(object.getId());

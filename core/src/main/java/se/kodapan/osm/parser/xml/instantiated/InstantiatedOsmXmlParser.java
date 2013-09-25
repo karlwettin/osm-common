@@ -3,6 +3,8 @@ package se.kodapan.osm.parser.xml.instantiated;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kodapan.lang.Intern;
+import se.kodapan.lang.InternImpl;
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.parser.xml.OsmXmlParserException;
 import se.kodapan.osm.parser.xml.OsmXmlTimestampFormat;
@@ -35,6 +37,12 @@ public class InstantiatedOsmXmlParser {
   private OsmXmlTimestampFormat timestampFormat = new OsmXmlTimestampFormat();
 
   private Root root = new Root();
+
+  private Intern<String> tagKeyIntern = new InternImpl<>();
+  private Intern<String> tagValueIntern = new InternImpl<>();
+  private Intern<String> userIntern = new InternImpl<>();
+  private Intern<String> roleIntern = new InternImpl<>();
+
 
   private enum State {
     none,
@@ -483,7 +491,7 @@ public class InstantiatedOsmXmlParser {
 
             RelationMembership member = new RelationMembership();
             member.setRelation(currentRelation);
-            member.setRole(xmlr.getAttributeValue(null, "role").intern());
+            member.setRole(roleIntern.intern(xmlr.getAttributeValue(null, "role")));
 
             Long identity = Long.valueOf(xmlr.getAttributeValue(null, "ref"));
             String type = xmlr.getAttributeValue(null, "type");
@@ -535,8 +543,8 @@ public class InstantiatedOsmXmlParser {
 
           if (state == State.none || state == State.create || state == State.modify) {
 
-            String key = root.getTagKeyIntern().intern(xmlr.getAttributeValue(null, "k"));
-            String value = root.getTagValueIntern().intern(xmlr.getAttributeValue(null, "v"));
+            String key = tagKeyIntern.intern(xmlr.getAttributeValue(null, "k"));
+            String value = tagValueIntern.intern(xmlr.getAttributeValue(null, "v"));
             current.setTag(key, value);
 
           } else if (state == State.delete) {
@@ -641,7 +649,7 @@ public class InstantiatedOsmXmlParser {
         object.setUid(Long.valueOf(value));
 
       } else if ("user".equals(key)) {
-        object.setUser(value);
+        object.setUser(userIntern.intern(value));
 
       } else if ("visible".equals(key)) {
         object.setVisible(Boolean.valueOf(value));

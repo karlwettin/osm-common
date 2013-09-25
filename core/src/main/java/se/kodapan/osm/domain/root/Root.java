@@ -15,9 +15,6 @@ public class Root implements Serializable {
 
   private static final long serialVersionUID = 1l;
 
-  private Intern<String> tagKeyIntern = new InternImpl<String>();
-  private Intern<String> tagValueIntern = new InternImpl<String>();
-
   private Map<Long, Node> nodes = new HashMap<Long, Node>();
   private Map<Long, Way> ways = new HashMap<Long, Way>();
   private Map<Long, Relation> relations = new HashMap<Long, Relation>();
@@ -67,22 +64,6 @@ public class Root implements Serializable {
     return object;
   }
 
-
-  public Intern<String> getTagKeyIntern() {
-    return tagKeyIntern;
-  }
-
-  public void setTagKeyIntern(Intern<String> tagKeyIntern) {
-    this.tagKeyIntern = tagKeyIntern;
-  }
-
-  public Intern<String> getTagValueIntern() {
-    return tagValueIntern;
-  }
-
-  public void setTagValueIntern(Intern<String> tagValueIntern) {
-    this.tagValueIntern = tagValueIntern;
-  }
 
   public Map<Long, Node> getNodes() {
     return nodes;
