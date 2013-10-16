@@ -8,6 +8,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.DefaultedHttpParams;
 import org.apache.http.params.HttpParams;
 import org.slf4j.Logger;
@@ -34,9 +35,8 @@ public class HttpService {
     SchemeRegistry schemeRegistry = new SchemeRegistry();
     schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 
-
-    cm = new ThreadSafeClientConnManager(null, schemeRegistry);
-    httpClient = new DefaultHttpClient(cm, null);
+    cm = new ThreadSafeClientConnManager(new BasicHttpParams(), schemeRegistry);
+    httpClient = new DefaultHttpClient(cm, new BasicHttpParams());
   }
 
   public void setUserAgent(HttpRequest httpRequest) {

@@ -34,13 +34,13 @@ public class TestNominatimJsonResponseParser extends OsmCommonTest {
     results = parser.parse(nominatim.search(queryBuilder.setLimit(1).build()));
     assertEquals(1, results.size());
 
-    Overpass overpass = new Overpass();
-    setUserAgent(overpass);
-    overpass.open();
-
-    OverpassUtils overpassUtils = new OverpassUtils(overpass);
-
-    overpassUtils.loadAllObjects(parser.getRoot());
+//    Overpass overpass = new Overpass();
+//    setUserAgent(overpass);
+//    overpass.open();
+//
+//    OverpassUtils overpassUtils = new OverpassUtils(overpass);
+//
+//    overpassUtils.loadAllObjects(parser.getRoot());
 
   }
 
