@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Adds interpolated points along a line if distance between two points within it is too short.
- *
+ * <p/>
  * Not thread safe.
  *
  * @author kalle
@@ -34,6 +34,16 @@ public class LineInterpolation {
       previousNode = node;
     }
     return coordinates;
+
+  }
+
+  public List<Coordinate> interpolate(double maximumKilometersPerCoordinate, Coordinate[] coordinates) {
+
+    List<Coordinate> response = new ArrayList<>();
+    for (int i = 1; i < coordinates.length; i++) {
+      response.addAll(interpolate(maximumKilometersPerCoordinate, coordinates[i - 1], coordinates[i]));
+    }
+    return response;
 
   }
 
