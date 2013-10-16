@@ -1,14 +1,18 @@
 package se.kodapan.osm.services.overpass;
 
-import se.kodapan.osm.parser.xml.OsmXmlParserException;
-import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
-import se.kodapan.osm.domain.*;
-import se.kodapan.osm.domain.root.Root;
-
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.Collection;
+
+import se.kodapan.osm.domain.Node;
+import se.kodapan.osm.domain.OsmObject;
+import se.kodapan.osm.domain.OsmObjectVisitor;
+import se.kodapan.osm.domain.Relation;
+import se.kodapan.osm.domain.Way;
+import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.parser.xml.OsmXmlParserException;
+import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 
 /**
  * @author kalle
@@ -24,7 +28,7 @@ public class OverpassUtils {
 
   public void loadAllObjects(Root root) throws OverpassException, OsmXmlParserException {
 
-    InstantiatedOsmXmlParser parser = new InstantiatedOsmXmlParser();
+    InstantiatedOsmXmlParser parser = InstantiatedOsmXmlParser.newInstance();
     parser.setRoot(root);
 
     for (Node node : root.getNodes().values()) {
@@ -45,7 +49,7 @@ public class OverpassUtils {
   }
 
   public Node getNode(long id) throws Exception {
-    return loadNode(new InstantiatedOsmXmlParser(), id);
+    return loadNode(InstantiatedOsmXmlParser.newInstance(), id);
   }
 
   private static OsmObjectVisitor<String> getObjectType = new OsmObjectVisitor<String>() {
@@ -99,7 +103,7 @@ public class OverpassUtils {
   }
 
   public Way loadWay(long id) throws OverpassException, OsmXmlParserException {
-    return loadWay(new InstantiatedOsmXmlParser(), id);
+    return loadWay(InstantiatedOsmXmlParser.newInstance(), id);
   }
 
   public Way loadWay(InstantiatedOsmXmlParser parser, long id) throws OverpassException, OsmXmlParserException {
@@ -122,7 +126,7 @@ public class OverpassUtils {
   }
 
   public Relation loadRelation(long id) throws OverpassException, OsmXmlParserException {
-    return loadRelation(new InstantiatedOsmXmlParser(), id);
+    return loadRelation(InstantiatedOsmXmlParser.newInstance(), id);
   }
 
 
@@ -153,7 +157,6 @@ public class OverpassUtils {
     return parser.getRoot().getRelations().get(id);
 
   }
-
 
 
   public void loadEnvelope(InstantiatedOsmXmlParser parser, double latitudeSouth, double longitudeWest, double latitudeNorth, double longitudeEast) throws OverpassException, OsmXmlParserException {

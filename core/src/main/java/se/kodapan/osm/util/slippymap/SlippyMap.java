@@ -26,6 +26,8 @@ public abstract class SlippyMap {
     // todo for those very large tile iterations. should of course not create a list first...
     return listTiles(southLatitude,westLongitude, northLatitude, eastLongitude, z).iterator();
   }
+
+    @Deprecated
   public abstract List<Tile> listTiles(double southLatitude, double westLongitude, double northLatitude, double eastLongitude, int z);
 
   public String toURL(Tile tile) {

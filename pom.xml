@@ -5,13 +5,15 @@
 
     <groupId>se.kodapan.osm.common</groupId>
     <artifactId>common-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
     <modules>
         <module>core</module>
+        <module>java</module>
         <module>jts</module>
+        <module>test-java</module>
     </modules>
 
     <dependencyManagement>
@@ -48,8 +50,8 @@
                 <version>3.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
 

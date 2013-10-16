@@ -1,5 +1,7 @@
 package se.kodapan.osm.services.nominatim;
 
+
+
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.*;
@@ -27,8 +29,8 @@ public class FileSystemCachedNominatim extends AbstractCachedNominatim {
   }
 
   @Override
-  public String getCachedResponse(String overpassQuery) throws Exception {
-    String filename = getFileName(overpassQuery);
+  public String getCachedResponse(String nominatimQuery) throws Exception {
+    String filename = getFileName(nominatimQuery);
     File file = new File(path, filename);
     if (!file.exists()) {
       return null;
@@ -41,21 +43,20 @@ public class FileSystemCachedNominatim extends AbstractCachedNominatim {
   }
 
   @Override
-  public void setCachedResponse(String overpassQuery, String overpassResponse) throws Exception {
+  public void setCachedResponse(String nominatimQuery, String nominatimResponse) throws Exception {
 
-    String filename = getFileName(overpassQuery);
+    String filename = getFileName(nominatimQuery);
     File file = new File(path, filename);
 
     ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-    oos.writeObject(new Record(overpassQuery, overpassResponse, System.currentTimeMillis()));
+    oos.writeObject(new Record(nominatimQuery, nominatimResponse, System.currentTimeMillis()));
     oos.close();
 
 
   }
 
-  private String getFileName(String overpassQuery) throws NoSuchAlgorithmException {
-    MessageDigest md = MessageDigest.getInstance("SHA-1");
-    return Hex.encodeHexString(md.digest(overpassQuery.getBytes()));
+  private String getFileName(String nominatimQuery) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+      return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(nominatimQuery.getBytes("utf8")));
   }
 
   public static class Record implements Serializable {

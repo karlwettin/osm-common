@@ -1,8 +1,9 @@
 package se.kodapan.osm.services.nominatim;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.OsmObject;
 import se.kodapan.osm.domain.Relation;
@@ -18,7 +19,8 @@ import java.util.List;
  */
 public class NominatimJsonResponseParser {
 
-  private JSONParser parser = new JSONParser();
+    private static final Logger log = LoggerFactory.getLogger(NominatimJsonResponseParser.class);
+
   private Root root = new Root();
 
   public List<Result> parse(NominatimQueryBuilder nominatimQueryBuilder) throws Exception {
@@ -27,10 +29,10 @@ public class NominatimJsonResponseParser {
 
   public List<Result> parse(String nominatimJsonResponse) throws Exception {
 
-    JSONArray jsonResults = (JSONArray) parser.parse(nominatimJsonResponse);
-    List<Result> results = new ArrayList<Result>(jsonResults.size());
+    JSONArray jsonResults = new JSONArray(nominatimJsonResponse);
+    List<Result> results = new ArrayList<Result>(jsonResults.length());
 
-    for (int i = 0; i < jsonResults.size(); i++) {
+    for (int i = 0; i < jsonResults.length(); i++) {
       JSONObject jsonResult = (JSONObject) jsonResults.get(i);
 
       Object osm_type = jsonResult.get("osm_type");
@@ -129,20 +131,26 @@ public class NominatimJsonResponseParser {
    * @return
    */
   public static Double parseJsonDoubleValue(JSONObject jsonObject, String key) {
-    Object value = jsonObject.get(key);
-    if (value == null) {
-      return null;
-    } else {
+      Object value;
+      try {
+          value = jsonObject.get(key);
+      } catch (JSONException e) {
+          return null;
+      }
+      if (value == null) {
+        return null;
+      }
+
+
       if (value instanceof Number) {
         return ((Number) value).doubleValue();
       }
       try {
         return Double.parseDouble(value.toString());
       } catch (NumberFormatException e) {
-        e.printStackTrace();
+        log.error("Could not parse double from " + value.toString(), e);
         return null;
       }
     }
-  }
 
-}
+  }

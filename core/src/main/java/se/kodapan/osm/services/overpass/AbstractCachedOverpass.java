@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCachedOverpass extends Overpass {
 
-  private static Logger log = LoggerFactory.getLogger(AbstractCachedOverpass.class);
+  protected Logger log = LoggerFactory.getLogger(getClass());
 
   @Override
   public String execute(String overpassQuery, String queryDescription) throws OverpassException {

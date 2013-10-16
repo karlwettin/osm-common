@@ -6,7 +6,7 @@
     <parent>
         <groupId>se.kodapan.osm.common</groupId>
         <artifactId>common-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>jts</artifactId>
     <version>${parent.version}</version>
@@ -21,7 +21,7 @@
 
         <dependency>
             <groupId>se.kodapan.osm.common</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>java</artifactId>
             <version>${parent.version}</version>
         </dependency>
 

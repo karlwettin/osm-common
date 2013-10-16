@@ -13,17 +13,17 @@ import java.util.Set;
  */
 public class InstantiatedOsmXmlParserDelta {
 
-  private Set<Node> createdNodes = new HashSet<>();
-  private Set<Node> modifiedNodes = new HashSet<>();
-  private Set<Node> deletedNodes = new HashSet<>();
+  private Set<Node> createdNodes = new HashSet<Node>();
+  private Set<Node> modifiedNodes = new HashSet<Node>();
+  private Set<Node> deletedNodes = new HashSet<Node>();
 
-  private Set<Way> createdWays = new HashSet<>();
-  private Set<Way> modifiedWays = new HashSet<>();
-  private Set<Way> deletedWays = new HashSet<>();
+  private Set<Way> createdWays = new HashSet<Way>();
+  private Set<Way> modifiedWays = new HashSet<Way>();
+  private Set<Way> deletedWays = new HashSet<Way>();
 
-  private Set<Relation> createdRelations = new HashSet<>();
-  private Set<Relation> modifiedRelations = new HashSet<>();
-  private Set<Relation> deletedRelations = new HashSet<>();
+  private Set<Relation> createdRelations = new HashSet<Relation>();
+  private Set<Relation> modifiedRelations = new HashSet<Relation>();
+  private Set<Relation> deletedRelations = new HashSet<Relation>();
 
 
   public Set<Node> getCreatedNodes() {

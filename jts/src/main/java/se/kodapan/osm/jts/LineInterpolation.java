@@ -39,7 +39,7 @@ public class LineInterpolation {
 
   public List<Coordinate> interpolate(double maximumKilometersPerCoordinate, Coordinate[] coordinates) {
 
-    List<Coordinate> response = new ArrayList<>();
+    List<Coordinate> response = new ArrayList<Coordinate>();
     for (int i = 1; i < coordinates.length; i++) {
       response.addAll(interpolate(maximumKilometersPerCoordinate, coordinates[i - 1], coordinates[i]));
     }

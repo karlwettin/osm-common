@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCachedNominatim extends Nominatim {
 
-  private static Logger log = LoggerFactory.getLogger(AbstractCachedNominatim.class);
+  protected Logger log = LoggerFactory.getLogger(getClass());
 
   @Override
   public synchronized String search(String url) throws Exception {

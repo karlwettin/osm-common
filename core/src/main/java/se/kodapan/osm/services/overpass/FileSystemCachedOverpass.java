@@ -49,14 +49,11 @@ public class FileSystemCachedOverpass extends AbstractCachedOverpass {
     ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
     oos.writeObject(new Record(overpassQuery, overpassResponse, System.currentTimeMillis()));
     oos.close();
-
-
   }
 
-  private String getFileName(String overpassQuery) throws NoSuchAlgorithmException {
-    MessageDigest md = MessageDigest.getInstance("SHA-1");
-    return Hex.encodeHexString(md.digest(overpassQuery.getBytes()));
-  }
+    private String getFileName(String overpassQuery) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(overpassQuery.getBytes("utf8")));
+    }
 
   public static class Record implements Serializable {
     private static final long serialVersionUID = 1l;
