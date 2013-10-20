@@ -12,6 +12,7 @@
     <modules>
         <module>core</module>
         <module>java</module>
+        <module>android</module>
         <module>jts</module>
         <module>test-java</module>
     </modules>

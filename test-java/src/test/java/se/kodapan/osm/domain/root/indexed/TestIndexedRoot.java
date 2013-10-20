@@ -20,7 +20,7 @@ public class TestIndexedRoot extends TestCase {
   public void test() throws Exception {
 
     PojoRoot root = new PojoRoot();
-    IndexedRoot index = new IndexedRoot(root);
+    IndexedRoot index = IndexedRoot.newInstance(root);
     index.open();
 
     InstantiatedOsmXmlParser parser = InstantiatedOsmXmlParser.newInstance();
