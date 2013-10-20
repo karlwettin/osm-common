@@ -8,17 +8,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.osm.parser.xml.OsmXmlParserException;
-import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
-import se.kodapan.osm.domain.*;
-import se.kodapan.osm.domain.root.Root;
 
 import se.kodapan.osm.services.HttpService;
 
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

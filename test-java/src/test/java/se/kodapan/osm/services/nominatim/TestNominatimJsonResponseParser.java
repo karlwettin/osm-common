@@ -1,6 +1,7 @@
 package se.kodapan.osm.services.nominatim;
 
 import se.kodapan.osm.OsmCommonTest;
+import se.kodapan.osm.domain.root.PojoRoot;
 import se.kodapan.osm.services.nominatim.NominatimJsonResponseParser.Result;
 import se.kodapan.osm.services.overpass.Overpass;
 import se.kodapan.osm.services.overpass.OverpassUtils;
@@ -25,11 +26,13 @@ public class TestNominatimJsonResponseParser extends OsmCommonTest {
     setUserAgent(nominatim);
     nominatim.open();
 
+    PojoRoot root = new PojoRoot();
     NominatimJsonResponseParser parser = new NominatimJsonResponseParser();
+    parser.setRoot(root);
     List<Result> results = parser.parse(nominatim.search(queryBuilder.build()));
 
     assertTrue(results.size() > 2);
-    assertEquals(parser.getRoot().gatherAllOsmObjects().size(), results.size());
+    assertEquals(root.gatherAllOsmObjects().size(), results.size());
 
     results = parser.parse(nominatim.search(queryBuilder.setLimit(1).build()));
     assertEquals(1, results.size());

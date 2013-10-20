@@ -1,11 +1,11 @@
 package se.kodapan.osm.services.overpass;
 
 import se.kodapan.osm.OsmCommonTest;
+import se.kodapan.osm.domain.root.PojoRoot;
 import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.Root;
 
 import java.io.StringReader;
 
@@ -23,7 +23,7 @@ public class TestOverpass extends OsmCommonTest {
     overpass.open();
 
 
-    Root root = new Root();
+    PojoRoot root = new PojoRoot();
     InstantiatedOsmXmlParser parser = InstantiatedOsmXmlParser.newInstance();
     parser.setRoot(root);
 

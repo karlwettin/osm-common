@@ -15,7 +15,7 @@ import se.kodapan.osm.domain.OsmObjectVisitor;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.RelationMembership;
 import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.domain.root.PojoRoot;
 
 /**
  * @author kalle
@@ -53,7 +53,7 @@ public class OsmXmlWriter extends Writer {
     }
 
 
-    public void write(Root root) throws IOException {
+    public void write(PojoRoot root) throws IOException {
         for (Node node : root.getNodes().values()) {
             write(node);
         }

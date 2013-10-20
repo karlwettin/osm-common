@@ -7,6 +7,7 @@ import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
 import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.domain.root.PojoRoot;
 import se.kodapan.osm.parser.xml.OsmXmlParserException;
 import se.kodapan.osm.parser.xml.OsmXmlTimestampFormat;
 
@@ -52,7 +53,7 @@ public abstract class InstantiatedOsmXmlParser {
 
   protected OsmXmlTimestampFormat timestampFormat = new OsmXmlTimestampFormat();
 
-  protected Root root = new Root();
+  protected Root root = new PojoRoot();
 
   protected Intern<String> tagKeyIntern = new InternImpl<String>();
   protected Intern<String> tagValueIntern = new InternImpl<String>();

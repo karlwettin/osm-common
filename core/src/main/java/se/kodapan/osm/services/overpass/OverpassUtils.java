@@ -10,7 +10,7 @@ import se.kodapan.osm.domain.OsmObject;
 import se.kodapan.osm.domain.OsmObjectVisitor;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.domain.root.PojoRoot;
 import se.kodapan.osm.parser.xml.OsmXmlParserException;
 import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 
@@ -26,7 +26,7 @@ public class OverpassUtils {
     this.overpass = overpass;
   }
 
-  public void loadAllObjects(Root root) throws OverpassException, OsmXmlParserException {
+  public void loadAllObjects(PojoRoot root) throws OverpassException, OsmXmlParserException {
 
     InstantiatedOsmXmlParser parser = InstantiatedOsmXmlParser.newInstance();
     parser.setRoot(root);
@@ -98,7 +98,7 @@ public class OverpassUtils {
         "</osm-script>", "Getting node " + id);
 
     parser.parse(new StringReader(response));
-    return parser.getRoot().getNodes().get(id);
+    return parser.getRoot().getNode(id);
 
   }
 
@@ -120,7 +120,7 @@ public class OverpassUtils {
         "</osm-script>", "Getting way " + id)));
 
 
-    return parser.getRoot().getWays().get(id);
+    return parser.getRoot().getWay(id);
 
 
   }
@@ -154,7 +154,7 @@ public class OverpassUtils {
         "</osm-script>", "Getting relation nodes" + id)));
 
 
-    return parser.getRoot().getRelations().get(id);
+    return parser.getRoot().getRelation(id);
 
   }
 

@@ -9,6 +9,7 @@ import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.RelationMembership;
 import se.kodapan.osm.domain.Way;
 import se.kodapan.osm.domain.root.Root;
+import se.kodapan.osm.domain.root.PojoRoot;
 
 import java.io.IOException;
 import java.util.*;
@@ -406,7 +407,7 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
     public Root factory(Map<ClassType, List<Polygon>> voronoi) throws IOException {
 
-      Root root = new Root();
+      Root root = new PojoRoot();
 
       for (Map.Entry<ClassType, List<Polygon>> entry : voronoi.entrySet()) {
         Relation classTypeInstanceMultiPolygon = new Relation();
