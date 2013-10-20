@@ -16,8 +16,6 @@ import java.io.*;
 /**
  * An .osm.xml and .osc.xml parser
  * into a fully instantiated object graph.
- * <p/>
- * This class is not thread safe!
  *
  * @author kalle
  * @since 2013-03-27 21:41
@@ -26,6 +24,9 @@ public abstract class InstantiatedOsmXmlParser {
 
   public static Class<InstantiatedOsmXmlParser> factoryClass;
 
+  /**
+   * @return a new instance depending on underlying OS. E.g. Android or Java.
+   */
   public static InstantiatedOsmXmlParser newInstance() {
     synchronized (InstantiatedOsmXmlParser.class) {
       if (factoryClass == null) {
