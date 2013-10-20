@@ -1,12 +1,16 @@
 package se.kodapan.osm.parser.xml.instantiated;
 
 
+import org.apache.commons.io.input.ReaderInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kodapan.osm.domain.*;
 import se.kodapan.osm.parser.xml.OsmXmlParserException;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
 /**
@@ -23,7 +27,17 @@ public abstract class AbstractStreamingInstantiatedOsmXmlParser extends Instanti
 
   private static final Logger log = LoggerFactory.getLogger(AbstractStreamingInstantiatedOsmXmlParser.class);
 
-  public abstract Stream readerFactory(Reader xml) throws StreamException;
+  public Stream readerFactory(Reader xml) throws StreamException {
+    return readerFactory(new ReaderInputStream(xml, "utf8"));
+  }
+  public Stream readerFactory(InputStream xml) throws StreamException {
+    try {
+      return readerFactory(new InputStreamReader(xml, "utf8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new StreamException(e);
+    }
+  }
+
   public static class StreamException extends Exception {
     public StreamException() {
       super();    
@@ -42,7 +56,7 @@ public abstract class AbstractStreamingInstantiatedOsmXmlParser extends Instanti
   }
   public abstract static class Stream {
     public abstract int getEventType() throws StreamException;
-    public abstract boolean hasNext() throws StreamException;
+    public abstract boolean isEndDocument(int eventType) throws StreamException;
     public abstract int next() throws StreamException;
     public abstract boolean isStartElement(int eventType) throws StreamException;
     public abstract boolean isEndElement(int eventType) throws StreamException;
@@ -76,9 +90,8 @@ public abstract class AbstractStreamingInstantiatedOsmXmlParser extends Instanti
       State state = State.none;
 
 
-      int eventType = xmlr.getEventType();
-      while (xmlr.hasNext()) {
-        eventType = xmlr.next();
+      int eventType = xmlr.getEventType(); // START_DOCUMENT
+      while (!xmlr.isEndDocument(eventType = xmlr.next())) {
 
         if (xmlr.isStartElement(eventType)) {
 

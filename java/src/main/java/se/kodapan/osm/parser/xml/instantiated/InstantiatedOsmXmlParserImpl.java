@@ -46,13 +46,8 @@ public class InstantiatedOsmXmlParserImpl extends AbstractStreamingInstantiatedO
       }
 
       @Override
-      public boolean hasNext() throws StreamException {
-        try {
-          return xmlr.hasNext();
-        } catch (XMLStreamException e) {
-          throw new StreamException(e);
-        }
-
+      public boolean isEndDocument(int eventType) throws StreamException {
+        return eventType == XMLStreamConstants.END_DOCUMENT;
       }
 
       @Override
