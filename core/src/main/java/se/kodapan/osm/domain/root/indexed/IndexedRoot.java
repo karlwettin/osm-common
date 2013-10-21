@@ -1,7 +1,5 @@
 package se.kodapan.osm.domain.root.indexed;
 
-import org.apache.lucene.search.Query;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -17,7 +15,7 @@ import se.kodapan.osm.domain.root.Root;
 /**
  * Created by kalle on 10/19/13.
  */
-public abstract class IndexedRoot extends AbstractRoot {
+public abstract class IndexedRoot<Query> extends AbstractRoot {
 
   public static Class<IndexedRoot> factoryClass;
 
@@ -47,6 +45,7 @@ public abstract class IndexedRoot extends AbstractRoot {
     }
   }
 
+  public abstract QueryFactories<Query> getQueryFactories();
 
   private Root decorated;
 

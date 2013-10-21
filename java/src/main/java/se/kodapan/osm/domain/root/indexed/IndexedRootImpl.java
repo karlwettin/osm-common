@@ -22,40 +22,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ * Implementation using Lucene 4.5.0.
+ *
  * Created by kalle on 10/19/13.
  */
-public class IndexedRootImpl extends AbstractRoot {
+public class IndexedRootImpl extends IndexedRoot<Query> {
 
-  private Root decorated;
-
+  private QueryFactories<Query> queryFactories = new QueryFactoriesImpl();
   @Override
-  public Enumerator<Node> enumerateNodes() {
-    return decorated.enumerateNodes();
-  }
-
-  @Override
-  public Enumerator<Way> enumerateWays() {
-    return decorated.enumerateWays();
-  }
-
-  @Override
-  public Enumerator<Relation> enumerateRelations() {
-    return decorated.enumerateRelations();
-  }
-
-  @Override
-  public Node getNode(long identity) {
-    return decorated.getNode(identity);
-  }
-
-  @Override
-  public Way getWay(long identity) {
-    return decorated.getWay(identity);
-  }
-
-  @Override
-  public Relation getRelation(long identity) {
-    return decorated.getRelation(identity);
+  public QueryFactories<Query> getQueryFactories() {
+    return queryFactories;
   }
 
   private Directory directory;
@@ -77,7 +53,7 @@ public class IndexedRootImpl extends AbstractRoot {
   private FieldType tagField;
 
   public IndexedRootImpl(Root decorated) {
-    this.decorated = decorated;
+    super(decorated);
 
     identityField = new FieldType();
     identityField.setIndexed(true);
@@ -308,7 +284,7 @@ public class IndexedRootImpl extends AbstractRoot {
 
     @Override
     public Set<OsmObject> visit(Node node) {
-      Set<OsmObject> affectedObjects = decorated.remove(node);
+      Set<OsmObject> affectedObjects = getDecorated().remove(node);
       try {
         indexWriter.deleteDocuments(new Term("node.identity", String.valueOf(node.getId())));
       } catch (IOException e) {
@@ -322,7 +298,7 @@ public class IndexedRootImpl extends AbstractRoot {
 
     @Override
     public Set<OsmObject> visit(Way way) {
-      Set<OsmObject> affectedObjects = decorated.remove(way);
+      Set<OsmObject> affectedObjects = getDecorated().remove(way);
       try {
         indexWriter.deleteDocuments(new Term("way.identity", String.valueOf(way.getId())));
       } catch (IOException e) {
@@ -336,7 +312,7 @@ public class IndexedRootImpl extends AbstractRoot {
 
     @Override
     public Set<OsmObject> visit(Relation relation) {
-      Set<OsmObject> affectedObjects = decorated.remove(relation);
+      Set<OsmObject> affectedObjects = getDecorated().remove(relation);
       try {
         indexWriter.deleteDocuments(new Term("relation.identity", String.valueOf(relation.getId())));
       } catch (IOException e) {
@@ -358,21 +334,21 @@ public class IndexedRootImpl extends AbstractRoot {
 
     @Override
     public Void visit(Node node) {
-      decorated.add(node);
+      getDecorated().add(node);
       node.accept(indexVisitor);
       return null;
     }
 
     @Override
     public Void visit(Way way) {
-      decorated.add(way);
+      getDecorated().add(way);
       way.accept(indexVisitor);
       return null;
     }
 
     @Override
     public Void visit(Relation relation) {
-      decorated.add(relation);
+      getDecorated().add(relation);
       relation.accept(indexVisitor);
       return null;
     }
@@ -388,6 +364,7 @@ public class IndexedRootImpl extends AbstractRoot {
     indexWriter.commit();
     searcherManager.maybeRefresh();
   }
+
 
   public Map<OsmObject, Float> search(Query query) throws IOException {
 

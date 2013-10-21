@@ -36,9 +36,17 @@ import se.kodapan.osm.domain.root.NotLoadedException;
 import se.kodapan.osm.domain.root.Root;
 
 /**
+ * Implementation using Lucene 3.5.0.
+ *
  * Created by kalle on 10/19/13.
  */
-public class IndexedRootImpl extends IndexedRoot {
+public class IndexedRootImpl extends IndexedRoot<Query> {
+
+  private QueryFactories<Query> queryFactories = new QueryFactoriesImpl();
+  @Override
+  public QueryFactories<Query> getQueryFactories() {
+    return queryFactories;
+  }
 
   private Directory directory;
   private IndexWriter indexWriter;

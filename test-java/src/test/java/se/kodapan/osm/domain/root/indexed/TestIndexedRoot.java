@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.Query;
 import se.kodapan.osm.domain.OsmObject;
 import se.kodapan.osm.domain.Way;
 import se.kodapan.osm.domain.root.PojoRoot;
@@ -20,7 +21,7 @@ public class TestIndexedRoot extends TestCase {
   public void test() throws Exception {
 
     PojoRoot root = new PojoRoot();
-    IndexedRoot index = IndexedRoot.newInstance(root);
+    IndexedRoot<Query> index = IndexedRoot.newInstance(root);
     index.open();
 
     InstantiatedOsmXmlParser parser = InstantiatedOsmXmlParser.newInstance();
@@ -44,9 +45,10 @@ public class TestIndexedRoot extends TestCase {
 
     // not matching geographically
 
+
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5952395).setWestLongitude(11.2786132)
         .setNorthLatitude(58.595755).setEastLongitude(11.2791668)
         .build(), BooleanClause.Occur.MUST);
@@ -59,8 +61,8 @@ public class TestIndexedRoot extends TestCase {
     // encloses the building but search for highway
 
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("highway").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("highway").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5948092).setWestLongitude(11.279312)
         .setNorthLatitude(58.5951071).setEastLongitude(11.2802286)
         .build(), BooleanClause.Occur.MUST);
@@ -73,8 +75,8 @@ public class TestIndexedRoot extends TestCase {
     // encloses the building
 
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5948092).setWestLongitude(11.279312)
         .setNorthLatitude(58.5951071).setEastLongitude(11.2802286)
         .build(), BooleanClause.Occur.MUST);
@@ -86,8 +88,8 @@ public class TestIndexedRoot extends TestCase {
     // encloses south west corner of building
 
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5948159).setWestLongitude(11.2794345)
         .setNorthLatitude(58.5949187).setEastLongitude(11.2795752)
         .build(), BooleanClause.Occur.MUST);
@@ -99,8 +101,8 @@ public class TestIndexedRoot extends TestCase {
     // encloses north east corner of building
 
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5949749).setWestLongitude(11.279869)
         .setNorthLatitude(58.5950411).setEastLongitude(11.280004)
         .build(), BooleanClause.Occur.MUST);
@@ -112,8 +114,8 @@ public class TestIndexedRoot extends TestCase {
     // encloses north west corner of building
 
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5949784).setWestLongitude(11.2794515)
         .setNorthLatitude(58.5950735).setEastLongitude(11.2795888)
         .build(), BooleanClause.Occur.MUST);
@@ -125,8 +127,8 @@ public class TestIndexedRoot extends TestCase {
     // encloses south east corner of building
 
     bq = new BooleanQuery();
-    bq.add(new ContainsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
-    bq.add(new WayEnvelopeQueryFactory()
+    bq.add(index.getQueryFactories().containsTagKeyQueryFactory().setKey("building").build(), BooleanClause.Occur.MUST);
+    bq.add(index.getQueryFactories().wayEnvelopeQueryFactory()
         .setSouthLatitude(58.5948425).setWestLongitude(11.2799007)
         .setNorthLatitude(58.5949016).setEastLongitude(11.2800471)
         .build(), BooleanClause.Occur.MUST);
