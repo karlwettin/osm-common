@@ -16,7 +16,9 @@ public abstract class OsmObject implements Serializable {
 
   public abstract <R> R accept(OsmObjectVisitor<R> visitor);
 
-  /** if true, then this object has not been loaded, it's just a referenced object */
+  /**
+   * if true, then this object has not been loaded, it's just a referenced object
+   */
   private boolean loaded;
 
   private long id;
@@ -37,7 +39,15 @@ public abstract class OsmObject implements Serializable {
   public void addRelationMembership(RelationMembership member) {
     if (relationMemberships == null) {
       relationMemberships = new ArrayList<RelationMembership>(5);
+    } else {
+      // don't add membership to the same object twice
+      for (RelationMembership relationMembership : relationMemberships) {
+        if (relationMembership.getRelation().equals(member.getRelation())) {
+          return;
+        }
+      }
     }
+
     relationMemberships.add(member);
   }
 

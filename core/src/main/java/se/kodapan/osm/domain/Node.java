@@ -25,6 +25,13 @@ public class Node extends OsmObject implements Serializable {
   public void addWayMembership(Way way) {
     if (waysMemberships == null) {
       waysMemberships = new ArrayList<Way>(5);
+    } else {
+      // don't add membership to the same way twice
+      for (Way wayMembership : waysMemberships) {
+        if (way.equals(wayMembership)) {
+          return;
+        }
+      }
     }
     waysMemberships.add(way);
   }
@@ -68,7 +75,6 @@ public class Node extends OsmObject implements Serializable {
   public void setX(double longitude) {
     setLongitude(longitude);
   }
-
 
 
   @Override
