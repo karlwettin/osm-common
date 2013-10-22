@@ -1,8 +1,6 @@
 package se.kodapan.osm.services.nominatim;
 
-
-
-import org.apache.commons.codec.binary.Hex;
+import se.kodapan.util.Hex;
 
 import java.io.*;
 import java.security.MessageDigest;

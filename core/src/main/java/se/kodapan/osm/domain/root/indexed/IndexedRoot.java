@@ -1,5 +1,6 @@
 package se.kodapan.osm.domain.root.indexed;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -19,10 +20,14 @@ public abstract class IndexedRoot<Query> extends AbstractRoot {
 
   public static Class<IndexedRoot> factoryClass;
 
+  public static IndexedRoot newInstance(Root decorated) {
+    return newInstance(decorated, null);
+  }
+
   /**
    * @return a new instance depending on underlying OS. E.g. Android or Java.
    */
-  public static IndexedRoot newInstance(Root decorated) {
+  public static IndexedRoot newInstance(Root decorated, File directory) {
     synchronized (IndexedRoot.class) {
       if (factoryClass == null) {
         try {
@@ -33,7 +38,11 @@ public abstract class IndexedRoot<Query> extends AbstractRoot {
       }
     }
     try {
-      return factoryClass.getConstructor(Root.class).newInstance(decorated);
+      if (directory != null) {
+        return factoryClass.getConstructor(Root.class, File.class).newInstance(decorated, directory);
+      } else {
+        return factoryClass.getConstructor(Root.class).newInstance(decorated);
+      }
     } catch (InstantiationException e) {
       throw new RuntimeException(e);
     } catch (IllegalAccessException e) {

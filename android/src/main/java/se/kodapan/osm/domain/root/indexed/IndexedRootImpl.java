@@ -16,9 +16,11 @@ import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.search.SearcherWarmer;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -48,11 +50,19 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
     return queryFactories;
   }
 
+  private File fileSystemDirectory;
   private Directory directory;
   private IndexWriter indexWriter;
   private SearcherManager searcherManager;
 
   private OsmObjectVisitor<Void> addVisitor = new AddVisitor();
+
+
+
+  public IndexedRootImpl(Root decorated, File fileSystemDirectory) {
+    super(decorated);
+    this.fileSystemDirectory = fileSystemDirectory;
+  }
 
   public IndexedRootImpl(Root decorated) {
     super(decorated);
@@ -121,8 +131,10 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
 
   @Override
   public void open() throws IOException {
-    if (directory == null) {
+    if (fileSystemDirectory == null) {
       directory = new RAMDirectory();
+    } else {
+      directory = FSDirectory.open(fileSystemDirectory);
     }
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_35, analyzer);
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);

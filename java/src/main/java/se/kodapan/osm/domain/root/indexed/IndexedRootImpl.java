@@ -6,6 +6,7 @@ import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
@@ -14,6 +15,7 @@ import se.kodapan.osm.domain.root.AbstractRoot;
 import se.kodapan.osm.domain.root.NotLoadedException;
 import se.kodapan.osm.domain.root.Root;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
     return queryFactories;
   }
 
+  private File fileSystemDirectory;
   private Directory directory;
   private IndexWriter indexWriter;
   private SearcherManager searcherManager;
@@ -53,7 +56,12 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
   private FieldType tagField;
 
   public IndexedRootImpl(Root decorated) {
+    this(decorated, null);
+  }
+
+  public IndexedRootImpl(Root decorated, File fileSystemDirectory) {
     super(decorated);
+    this.fileSystemDirectory = fileSystemDirectory;
 
     identityField = new FieldType();
     identityField.setIndexed(true);
@@ -144,8 +152,10 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
   private boolean open = false;
 
   public void open() throws IOException {
-    if (directory == null) {
+    if (fileSystemDirectory == null) {
       directory = new RAMDirectory();
+    } else {
+      directory = FSDirectory.open(fileSystemDirectory);
     }
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_45, analyzer);
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
