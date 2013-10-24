@@ -5,10 +5,10 @@ Library for accessing OpenStreetMap services, parsing and processing data.
 
 Best documentation is found in test cases.
 
-API mainly include support for Nominatim, Overpass, changeset stores and osm.xml-parsing.
+API mainly include support for Nominatim, Overpass, changeset stores and osm/osc.xml-parsing.
 
 Module core contains several abstract classes that are implemented in module java and module android.
-Main difference between java and android modules is what XML-stream API and Lucene version is used.
+Difference between java and android modules is what XML-stream API and Lucene version is used.
 
 ```
 se.kodapan.osm.domain:OsmObject
