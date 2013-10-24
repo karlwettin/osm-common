@@ -5,15 +5,12 @@ Library for accessing OpenStreetMap services, parsing and processing data.
 
 Best documentation is found in test cases.
 
-
 API mainly include support for Nominatim, Overpass, changeset stores and osm.xml-parsing.
 
-```
-/** RAM-store for keeping track of OSM objects */
-se.kodapan.osm.domain:Root
-  #get(id):OsmObject
-  #add(osmObject)
+Module core contains several abstract classes that are implemented in module java and module android.
+Main difference between java and android modules is what XML-stream API and what version of Lucene that is used.
 
+```
 se.kodapan.osm.domain:OsmObject
   #getId():long
   #setTag(key, value)
@@ -22,6 +19,22 @@ se.kodapan.osm.domain:OsmObject
 se.kodapan.osm.domain:Node extends OsmObject
 se.kodapan.osm.domain:Way extends OsmObject
 se.kodapan.osm.domain:Relation extends OsmObject
+
+/** Abstract store for keeping track of OSM objects */
+se.kodapan.osm.domain.root:Root
+  #getNode(id):Node
+  #getWay(id):Way
+  #getRelation(id):Relation
+  #add(osmObject)
+
+/** RAM-store for keeping track of OSM objects */
+se.kodapan.osm.domain.root:PojoRoot
+
+/** Inverted index decorating any Root, allowing for fast advanced local queries alá Overpass */
+se.kodapan.osm.domain.root.indexed:IndexedRoot<Query> extends Root
+  #search(Query):Map<OsmObject, Float>
+  #commit()
+  #reconstruct()
 
 /** Create, update and delete OSM objects in a Root based on the content of an .osm.xml  */
 se.kodapan.osm.parser.xml.instantiated:InstantiatedOsmXmlParser
