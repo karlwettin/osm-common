@@ -8,7 +8,7 @@ Best documentation is found in test cases.
 API mainly include support for Nominatim, Overpass, changeset stores and osm.xml-parsing.
 
 Module core contains several abstract classes that are implemented in module java and module android.
-Main difference between java and android modules is what XML-stream API and what version of Lucene that is used.
+Main difference between java and android modules is what XML-stream API and Lucene version is used.
 
 ```
 se.kodapan.osm.domain:OsmObject
