@@ -9,16 +9,15 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Collector;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Scorer;
-import org.apache.lucene.search.SearcherManager;
-import org.apache.lucene.search.SearcherWarmer;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.kodapan.osm.domain.*;
+import se.kodapan.osm.domain.root.Root;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,22 +28,17 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
-import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.domain.OsmObject;
-import se.kodapan.osm.domain.OsmObjectVisitor;
-import se.kodapan.osm.domain.Relation;
-import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.NotLoadedException;
-import se.kodapan.osm.domain.root.Root;
-
 /**
  * Implementation using Lucene 3.5.0.
- *
+ * <p/>
  * Created by kalle on 10/19/13.
  */
 public class IndexedRootImpl extends IndexedRoot<Query> {
 
+  private static Logger log = LoggerFactory.getLogger(IndexedRootImpl.class);
+
   private QueryFactories<Query> queryFactories = new QueryFactoriesImpl();
+
   @Override
   public QueryFactories<Query> getQueryFactories() {
     return queryFactories;
@@ -56,7 +50,6 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
   private SearcherManager searcherManager;
 
   private OsmObjectVisitor<Void> addVisitor = new AddVisitor();
-
 
 
   public IndexedRootImpl(Root decorated, File fileSystemDirectory) {
@@ -180,8 +173,15 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
       Document document = new Document();
       document.add(new Field("class", "node", Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
       document.add(new Field("node.identity", String.valueOf(node.getId()), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
-      document.add(numericCoordinateFieldFactory("node.latitude", node.getLatitude()));
-      document.add(numericCoordinateFieldFactory("node.longitude", node.getLongitude()));
+
+      if (node.isLoaded()) {
+        document.add(numericCoordinateFieldFactory("node.latitude", node.getLatitude()));
+        document.add(numericCoordinateFieldFactory("node.longitude", node.getLongitude()));
+      } else if (log.isInfoEnabled()) {
+        log.info("Indexing node " + node.getId() + " which has not been loaded. Coordinates will not be searchable.");
+      }
+
+
       addObjectFields(node, document);
       try {
         indexWriter.updateDocument(new Term("node.identity", String.valueOf(node.getId())), document);
@@ -206,9 +206,14 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
         double northLatitude = -90d;
         double eastLongitude = -180d;
 
+        boolean hasLoadedNodes = false;
+
         for (Node node : way.getNodes()) {
           if (!node.isLoaded()) {
-            throw new NotLoadedException(node);
+            if (log.isDebugEnabled()) {
+              log.debug("Skipping non loaded node " + node.getId() + " in way " + way.getId());
+            }
+            continue;
           }
           if (node.getLatitude() < southLatitude) {
             southLatitude = node.getLatitude();
@@ -222,12 +227,19 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
           if (node.getLongitude() > eastLongitude) {
             eastLongitude = node.getLongitude();
           }
+          hasLoadedNodes = true;
         }
 
-        document.add(numericCoordinateFieldFactory("way.envelope.south_latitude", southLatitude));
-        document.add(numericCoordinateFieldFactory("way.envelope.west_longitude", westLongitude));
-        document.add(numericCoordinateFieldFactory("way.envelope.north_latitude", northLatitude));
-        document.add(numericCoordinateFieldFactory("way.envelope.east_longitude", eastLongitude));
+        if (hasLoadedNodes) {
+
+          document.add(numericCoordinateFieldFactory("way.envelope.south_latitude", southLatitude));
+          document.add(numericCoordinateFieldFactory("way.envelope.west_longitude", westLongitude));
+          document.add(numericCoordinateFieldFactory("way.envelope.north_latitude", northLatitude));
+          document.add(numericCoordinateFieldFactory("way.envelope.east_longitude", eastLongitude));
+
+        } else if (log.isInfoEnabled()) {
+          log.info("Indexing way " + way.getId() + " which contains nodes that are not loaded. Coordinates will not be searchable.");
+        }
 
       }
 

@@ -10,9 +10,9 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.kodapan.osm.domain.*;
-import se.kodapan.osm.domain.root.AbstractRoot;
-import se.kodapan.osm.domain.root.NotLoadedException;
 import se.kodapan.osm.domain.root.Root;
 
 import java.io.File;
@@ -25,12 +25,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Implementation using Lucene 4.5.0.
- *
+ * <p/>
  * Created by kalle on 10/19/13.
  */
 public class IndexedRootImpl extends IndexedRoot<Query> {
 
+  private static Logger log = LoggerFactory.getLogger(IndexedRootImpl.class);
+
   private QueryFactories<Query> queryFactories = new QueryFactoriesImpl();
+
   @Override
   public QueryFactories<Query> getQueryFactories() {
     return queryFactories;
@@ -194,8 +197,14 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
       document.add(new BinaryDocValuesField("class_value", class_nodeByteRef));
       document.add(new Field("node.identity", String.valueOf(node.getId()), classField));
       document.add(new NumericDocValuesField("node.identity_value", node.getId()));
-      document.add(new DoubleField("node.latitude", node.getLatitude(), coordinateDoubleField));
-      document.add(new DoubleField("node.longitude", node.getLongitude(), coordinateDoubleField));
+
+      if (node.isLoaded()) {
+        document.add(new DoubleField("node.latitude", node.getLatitude(), coordinateDoubleField));
+        document.add(new DoubleField("node.longitude", node.getLongitude(), coordinateDoubleField));
+      } else if (log.isInfoEnabled()) {
+        log.info("Indexing node " + node.getId() + " which has not been loaded. Coordinates will not be searchable.");
+      }
+
       addObjectFields(node, document);
       try {
         indexWriter.updateDocument(new Term("node.identity", String.valueOf(node.getId())), document);
@@ -222,9 +231,14 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
         double northLatitude = -90d;
         double eastLongitude = -180d;
 
+        boolean hasLoadedNodes = false;
+
         for (Node node : way.getNodes()) {
           if (!node.isLoaded()) {
-            throw new NotLoadedException(node);
+            if (log.isDebugEnabled()) {
+              log.debug("Skipping non loaded node " + node.getId() + " in way " + way.getId());
+            }
+            continue;
           }
           if (node.getLatitude() < southLatitude) {
             southLatitude = node.getLatitude();
@@ -238,12 +252,17 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
           if (node.getLongitude() > eastLongitude) {
             eastLongitude = node.getLongitude();
           }
+          hasLoadedNodes = true;
         }
 
-        document.add(new DoubleField("way.envelope.south_latitude", southLatitude, coordinateDoubleField));
-        document.add(new DoubleField("way.envelope.west_longitude", westLongitude, coordinateDoubleField));
-        document.add(new DoubleField("way.envelope.north_latitude", northLatitude, coordinateDoubleField));
-        document.add(new DoubleField("way.envelope.east_longitude", eastLongitude, coordinateDoubleField));
+        if (hasLoadedNodes) {
+          document.add(new DoubleField("way.envelope.south_latitude", southLatitude, coordinateDoubleField));
+          document.add(new DoubleField("way.envelope.west_longitude", westLongitude, coordinateDoubleField));
+          document.add(new DoubleField("way.envelope.north_latitude", northLatitude, coordinateDoubleField));
+          document.add(new DoubleField("way.envelope.east_longitude", eastLongitude, coordinateDoubleField));
+        } else if (log.isInfoEnabled()) {
+          log.info("Indexing way " + way.getId() + " which contains nodes that are not loaded. Coordinates will not be searchable.");
+        }
 
       }
 
