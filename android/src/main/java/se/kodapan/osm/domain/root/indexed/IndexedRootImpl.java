@@ -13,6 +13,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +128,7 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
     if (fileSystemDirectory == null) {
       directory = new RAMDirectory();
     } else {
-      directory = FSDirectory.open(fileSystemDirectory);
+      directory = new SimpleFSDirectory(fileSystemDirectory);
     }
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_35, analyzer);
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
