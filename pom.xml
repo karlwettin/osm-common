@@ -15,6 +15,7 @@
         <module>android</module>
         <module>jts</module>
         <module>test-java</module>
+        <module>tools</module>
     </modules>
 
     <dependencyManagement>
