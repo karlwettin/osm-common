@@ -160,25 +160,39 @@ public class OverpassUtils {
 
 
   public void loadEnvelope(InstantiatedOsmXmlParser parser, double latitudeSouth, double longitudeWest, double latitudeNorth, double longitudeEast) throws OverpassException, OsmXmlParserException {
+    loadEnvelope(parser, latitudeSouth, longitudeWest, latitudeNorth, longitudeEast, null);
+  }
+
+
+  public void loadEnvelope(InstantiatedOsmXmlParser parser, double latitudeSouth, double longitudeWest, double latitudeNorth, double longitudeEast, String query) throws OverpassException, OsmXmlParserException {
+    if (query == null) {
+      query = "";
+    }
+
     DecimalFormat df = new DecimalFormat("#.#####################");
     String bbox = "<bbox-query s=\"" + df.format(latitudeSouth) + "\" n=\"" + df.format(latitudeNorth) + "\" w=\"" + df.format(longitudeWest) + "\" e=\"" + df.format(longitudeEast) + "\"/>";
 
     parser.parse(new StringReader(overpass.execute("<osm-script>\n" +
         "  " + bbox + "\n" +
+        "  " + query + "\n" +
         "  <print/>\n" +
         "</osm-script>", "Getting nodes in bbox " + bbox)));
 
     parser.parse(new StringReader(overpass.execute("<osm-script>\n" +
         "  " + bbox + "\n" +
+        "  " + query + "\n" +
         "  <recurse type=\"node-way\"/>" +
         "  <print/>\n" +
         "</osm-script>", "Getting ways in bbox " + bbox)));
 
     parser.parse(new StringReader(overpass.execute("<osm-script>\n" +
         "  " + bbox + "\n" +
+        "  " + query + "\n" +
         "  <recurse type=\"node-relation\"/>" +
         "  <print/>\n" +
         "</osm-script>", "Getting relations in bbox " + bbox)));
 
   }
+
+
 }
