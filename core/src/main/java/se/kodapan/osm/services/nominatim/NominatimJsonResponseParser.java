@@ -24,8 +24,8 @@ public class NominatimJsonResponseParser {
 
   private Root root = new PojoRoot();
 
-  public List<Result> parse(NominatimQueryBuilder nominatimQueryBuilder) throws Exception {
-    return parse(nominatimQueryBuilder.setFormat("json").build());
+  public List<Result> search(Nominatim nominatim, NominatimQueryBuilder nominatimQueryBuilder) throws Exception {
+    return parse(nominatim.search(nominatimQueryBuilder.setFormat("json").build()));
   }
 
   public List<Result> parse(String nominatimJsonResponse) throws Exception {
