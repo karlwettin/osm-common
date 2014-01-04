@@ -405,9 +405,9 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
     private long identity = -1;
 
-    public Root factory(Map<ClassType, List<Polygon>> voronoi) throws IOException {
+    public PojoRoot factory(Map<ClassType, List<Polygon>> voronoi) throws IOException {
 
-      Root root = new PojoRoot();
+      PojoRoot root = new PojoRoot();
 
       for (Map.Entry<ClassType, List<Polygon>> entry : voronoi.entrySet()) {
         Relation classTypeInstanceMultiPolygon = new Relation();
