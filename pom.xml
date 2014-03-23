@@ -12,7 +12,11 @@
     <modules>
         <module>core</module>
         <module>java</module>
-        <module>android</module>
+        <!--
+        Android module requires an Android framework
+        and will not compile using standard Java.
+        -->
+        <!--<module>android</module>-->
         <module>jts</module>
         <module>test-java</module>
         <module>tools</module>
