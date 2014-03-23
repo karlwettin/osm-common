@@ -1,5 +1,7 @@
 package se.kodapan.osm.domain;
 
+import se.kodapan.osm.domain.root.NotLoadedException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,15 @@ public class Way extends OsmObject implements Serializable {
 
   private List<Node> nodes;
 
+  /**
+   * @return true if an enclosed polygon
+   */
+  public boolean isPolygon() {
+    if (!isLoaded()) {
+      throw new NotLoadedException(this);
+    }
+    return getNodes().size() > 2 && getNodes().get(0).equals(getNodes().get(getNodes().size() - 1));
+  }
 
   public void addNode(Node node) {
     if (nodes == null) {
