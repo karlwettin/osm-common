@@ -134,7 +134,11 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
         public void run() {
           OsmObject object;
           while ((object = queue.poll()) != null) {
-            object.accept(indexVisitor);
+            if (object.isLoaded()) {
+              object.accept(indexVisitor);
+            } else {
+              log.warn("Ignoring non loaded " + object.getClass().getSimpleName() + "#id=" + object.getId());
+            }
           }
         }
       });
