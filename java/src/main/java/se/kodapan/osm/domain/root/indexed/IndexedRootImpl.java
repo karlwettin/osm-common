@@ -165,7 +165,7 @@ public class IndexedRootImpl extends IndexedRoot<Query> {
       directory = FSDirectory.open(fileSystemDirectory);
     }
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_45, analyzer);
-    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
     indexWriter = new IndexWriter(directory, config);
     searcherManager = new SearcherManager(indexWriter, true, new SearcherFactory());
     open = true;
