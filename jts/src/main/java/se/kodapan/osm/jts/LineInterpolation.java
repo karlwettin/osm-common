@@ -29,7 +29,7 @@ public class LineInterpolation {
     Node previousNode = null;
     for (Node node : way.getNodes()) {
       if (previousNode != null) {
-        coordinates.addAll(interpolate(maximumKilometersPerCoordinate, node, previousNode));
+        coordinates.addAll(interpolate(maximumKilometersPerCoordinate, previousNode, node));
       }
       previousNode = node;
     }
