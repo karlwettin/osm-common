@@ -89,8 +89,8 @@ public class LineInterpolation {
       if (line.size() == 1) {
         // if interpolation delta is too large then create centroid coordinate
         com.vividsolutions.jts.geom.Coordinate centroid = new com.vividsolutions.jts.geom.Coordinate();
-        centroid.y = (a.y + b.x) / 2d;
-        centroid.x = (a.x + b.y) / 2d;
+        centroid.y = (a.y + b.y) / 2d;
+        centroid.x = (a.x + b.x) / 2d;
         line.add(centroid);
       }
       line.add(b);
