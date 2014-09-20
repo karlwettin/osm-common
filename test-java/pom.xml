@@ -6,7 +6,7 @@
   <parent>
     <groupId>se.kodapan.osm.common</groupId>
     <artifactId>common-parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
   </parent>
   <artifactId>test-java</artifactId>
 
@@ -22,7 +22,6 @@
     <dependency>
       <groupId>se.kodapan.osm.common</groupId>
       <artifactId>java</artifactId>
-      <version>${project.parent.version}</version>
     </dependency>
 
 
