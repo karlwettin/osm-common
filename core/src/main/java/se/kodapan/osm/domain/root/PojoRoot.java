@@ -79,12 +79,16 @@ public class PojoRoot extends AbstractRoot implements Serializable {
 
     @Override
     public Set<OsmObject> visit(Node node) {
+
       Set<OsmObject> affectedRelations = new HashSet<OsmObject>(1024);
 
 
       if (node.getWaysMemberships() != null) {
         for (Way way : node.getWaysMemberships()) {
-          way.getNodes().remove(node);
+          // need to loop in case we visit this node multiple times, eg a polygon where this is start and stop
+          while (way.getNodes().contains(node)) {
+            way.getNodes().remove(node);
+          }
           affectedRelations.add(way);
         }
       }
@@ -109,6 +113,9 @@ public class PojoRoot extends AbstractRoot implements Serializable {
 
       if (way.getNodes() != null) {
         for (Node node : way.getNodes()) {
+          if (node.getWaysMemberships() == null) {
+            System.currentTimeMillis();
+          }
           node.getWaysMemberships().remove(way);
           affectedRelations.add(node);
         }

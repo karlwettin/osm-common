@@ -27,6 +27,7 @@ public class Node extends OsmObject implements Serializable {
       waysMemberships = new ArrayList<Way>(5);
     } else {
       // don't add membership to the same way twice
+      // this happens for instance when this is the start and stop in a polygon.
       for (Way wayMembership : waysMemberships) {
         if (way.equals(wayMembership)) {
           return;
