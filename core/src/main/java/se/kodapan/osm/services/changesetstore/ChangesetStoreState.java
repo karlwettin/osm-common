@@ -3,8 +3,6 @@ package se.kodapan.osm.services.changesetstore;
 import java.util.List;
 
 /**
- *
- *
  * @author kalle
  * @since 2013-05-03 20:22
  */

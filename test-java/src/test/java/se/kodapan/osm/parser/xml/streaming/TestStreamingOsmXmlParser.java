@@ -21,22 +21,22 @@ public class TestStreamingOsmXmlParser extends TestCase {
     final AtomicInteger relationsCounter = new AtomicInteger();
 
     StreamingOsmXmlParser parser = StreamingOsmXmlParser.newInstance();
-    parser.read(new InputStreamReader(getClass().getResourceAsStream("/fjallbacka.osm.xml"), "UTF8"), new StreamingOsmXmlParserListener(){
-          @Override
-          public void processParsedNode(Node node) {
-            nodesCounter.incrementAndGet();
-          }
+    parser.read(new InputStreamReader(getClass().getResourceAsStream("/fjallbacka.osm.xml"), "UTF8"), new StreamingOsmXmlParserListener() {
+      @Override
+      public void processParsedNode(Node node) {
+        nodesCounter.incrementAndGet();
+      }
 
-          @Override
-          public void processParsedWay(Way way) {
-            waysCounter.incrementAndGet();
-          }
+      @Override
+      public void processParsedWay(Way way) {
+        waysCounter.incrementAndGet();
+      }
 
-          @Override
-          public void processParsedRelation(Relation relation) {
-            relationsCounter.incrementAndGet();
-          }
-        });
+      @Override
+      public void processParsedRelation(Relation relation) {
+        relationsCounter.incrementAndGet();
+      }
+    });
 
     assertEquals(36393, nodesCounter.get());
     assertEquals(2012, waysCounter.get());

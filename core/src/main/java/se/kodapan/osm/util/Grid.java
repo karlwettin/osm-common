@@ -111,7 +111,6 @@ public class Grid {
   }
 
 
-
   public long getHeight() {
     return height;
   }

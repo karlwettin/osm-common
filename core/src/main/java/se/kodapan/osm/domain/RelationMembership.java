@@ -13,7 +13,9 @@ public class RelationMembership implements Serializable {
   private Relation relation;
   private OsmObject object;
 
-  /** todo intern in domain! */
+  /**
+   * todo intern in domain!
+   */
   private String role;
 
   public Relation getRelation() {

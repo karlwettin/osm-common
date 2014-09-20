@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Java serialization tool for JTS shapes.
- *
+ * <p/>
  * Currently only support polygons.
  *
  * @author kalle

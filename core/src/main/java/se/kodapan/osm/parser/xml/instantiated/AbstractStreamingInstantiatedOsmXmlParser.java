@@ -30,6 +30,7 @@ public abstract class AbstractStreamingInstantiatedOsmXmlParser extends Instanti
   public Stream readerFactory(Reader xml) throws StreamException {
     return readerFactory(new ReaderInputStream(xml, "utf8"));
   }
+
   public Stream readerFactory(InputStream xml) throws StreamException {
     try {
       return readerFactory(new InputStreamReader(xml, "utf8"));
@@ -40,34 +41,46 @@ public abstract class AbstractStreamingInstantiatedOsmXmlParser extends Instanti
 
   public static class StreamException extends Exception {
     public StreamException() {
-      super();    
+      super();
     }
 
     public StreamException(String message) {
-      super(message);    
+      super(message);
     }
 
     public StreamException(String message, Throwable cause) {
-      super(message, cause);    
+      super(message, cause);
     }
+
     public StreamException(Throwable cause) {
-      super(cause);    
+      super(cause);
     }
   }
+
   public abstract static class Stream {
     public abstract int getEventType() throws StreamException;
+
     public abstract boolean isEndDocument(int eventType) throws StreamException;
+
     public abstract int next() throws StreamException;
+
     public abstract boolean isStartElement(int eventType) throws StreamException;
+
     public abstract boolean isEndElement(int eventType) throws StreamException;
+
     public abstract String getLocalName() throws StreamException;
+
     public abstract String getAttributeValue(String what, String key) throws StreamException;
+
     public abstract int getAttributeCount() throws StreamException;
+
     public abstract String getAttributeValue(int index) throws StreamException;
+
     public abstract String getAttributeLocalName(int index) throws StreamException;
+
     public abstract void close() throws StreamException;
   }
-  
+
 
   public InstantiatedOsmXmlParserDelta parse(Reader xml) throws OsmXmlParserException {
 

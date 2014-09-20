@@ -2,14 +2,10 @@ package se.kodapan.osm.parser.xml.streaming;
 
 import java.io.Reader;
 
-import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.domain.Relation;
-import se.kodapan.osm.domain.Way;
-
 /**
  * Created by kalle on 10/16/13.
  */
-public abstract  class StreamingOsmXmlParser {
+public abstract class StreamingOsmXmlParser {
 
   public static Class<StreamingOsmXmlParser> factoryClass;
 
@@ -32,8 +28,7 @@ public abstract  class StreamingOsmXmlParser {
     }
   }
 
-    public abstract void read(Reader xml, StreamingOsmXmlParserListener listener) throws Exception;
-
+  public abstract void read(Reader xml, StreamingOsmXmlParserListener listener) throws Exception;
 
 
 }

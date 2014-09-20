@@ -3,8 +3,6 @@ package se.kodapan.osm.services.nominatim;
 import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.domain.root.PojoRoot;
 import se.kodapan.osm.services.nominatim.NominatimJsonResponseParser.Result;
-import se.kodapan.osm.services.overpass.Overpass;
-import se.kodapan.osm.services.overpass.OverpassUtils;
 
 import java.util.List;
 
@@ -17,10 +15,10 @@ public class TestNominatimJsonResponseParser extends OsmCommonTest {
   public void test() throws Exception {
 
     NominatimQueryBuilder queryBuilder = new NominatimQueryBuilder()
-            .setQuery("Halmstad, Sverige")
-            .setLimit(10)
-            .setFormat("json")
-            .addCountryCode("se");
+        .setQuery("Halmstad, Sverige")
+        .setLimit(10)
+        .setFormat("json")
+        .addCountryCode("se");
 
     Nominatim nominatim = new Nominatim();
     setUserAgent(nominatim);

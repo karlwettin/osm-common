@@ -1,6 +1,5 @@
 package se.kodapan.osm.services.changesetstore;
 
-import junit.framework.TestCase;
 import se.kodapan.osm.OsmCommonTest;
 
 import java.io.Reader;

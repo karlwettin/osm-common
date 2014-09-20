@@ -66,7 +66,7 @@ public class TMS extends SlippyMap {
 
     @Override
     public double getSouthLatitude() {
-      return evaluateLatitude(getY() -1, getZ());
+      return evaluateLatitude(getY() - 1, getZ());
     }
 
     @Override

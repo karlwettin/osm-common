@@ -46,7 +46,7 @@ public class NominatimQueryBuilder {
 
     if (countryCodes != null && !countryCodes.isEmpty()) {
       url.append("countrycodes=");
-      for (Iterator<String> it = countryCodes.iterator(); it.hasNext();) {
+      for (Iterator<String> it = countryCodes.iterator(); it.hasNext(); ) {
         url.append(it.next());
         if (it.hasNext()) {
           url.append(",");

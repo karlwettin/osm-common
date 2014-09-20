@@ -1,9 +1,7 @@
 package se.kodapan.osm.services.changesetstore;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kodapan.osm.services.HttpService;

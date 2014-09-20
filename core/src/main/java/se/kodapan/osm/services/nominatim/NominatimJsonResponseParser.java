@@ -1,15 +1,16 @@
 package se.kodapan.osm.services.nominatim;
 
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.OsmObject;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.Root;
 import se.kodapan.osm.domain.root.PojoRoot;
+import se.kodapan.osm.domain.root.Root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class NominatimJsonResponseParser {
 
-    private static final Logger log = LoggerFactory.getLogger(NominatimJsonResponseParser.class);
+  private static final Logger log = LoggerFactory.getLogger(NominatimJsonResponseParser.class);
 
   private Root root = new PojoRoot();
 
@@ -134,26 +135,26 @@ public class NominatimJsonResponseParser {
    * @return
    */
   public static Double parseJsonDoubleValue(JSONObject jsonObject, String key) {
-      Object value;
-      try {
-          value = jsonObject.get(key);
-      } catch (JSONException e) {
-          return null;
-      }
-      if (value == null) {
-        return null;
-      }
-
-
-      if (value instanceof Number) {
-        return ((Number) value).doubleValue();
-      }
-      try {
-        return Double.parseDouble(value.toString());
-      } catch (NumberFormatException e) {
-        log.error("Could not parse double from " + value.toString(), e);
-        return null;
-      }
+    Object value;
+    try {
+      value = jsonObject.get(key);
+    } catch (JSONException e) {
+      return null;
+    }
+    if (value == null) {
+      return null;
     }
 
+
+    if (value instanceof Number) {
+      return ((Number) value).doubleValue();
+    }
+    try {
+      return Double.parseDouble(value.toString());
+    } catch (NumberFormatException e) {
+      log.error("Could not parse double from " + value.toString(), e);
+      return null;
+    }
   }
+
+}

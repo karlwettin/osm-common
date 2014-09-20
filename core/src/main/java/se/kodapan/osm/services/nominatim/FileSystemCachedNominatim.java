@@ -54,7 +54,7 @@ public class FileSystemCachedNominatim extends AbstractCachedNominatim {
   }
 
   private String getFileName(String nominatimQuery) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-      return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(nominatimQuery.getBytes("utf8")));
+    return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(nominatimQuery.getBytes("utf8")));
   }
 
   public static class Record implements Serializable {

@@ -51,9 +51,9 @@ public class FileSystemCachedOverpass extends AbstractCachedOverpass {
     oos.close();
   }
 
-    private String getFileName(String overpassQuery) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(overpassQuery.getBytes("utf8")));
-    }
+  private String getFileName(String overpassQuery) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    return Hex.encodeHexString(MessageDigest.getInstance("SHA-1").digest(overpassQuery.getBytes("utf8")));
+  }
 
   public static class Record implements Serializable {
     private static final long serialVersionUID = 1l;

@@ -30,8 +30,8 @@ public class OsmXmlTimestampFormat extends DateFormat {
 
   @Override
   public Date parse(String s, ParsePosition parsePosition) {
-	  if (s.length() - parsePosition.getIndex() == format1.length()) {
-		 return implementation1.parse(s, parsePosition);
+    if (s.length() - parsePosition.getIndex() == format1.length()) {
+      return implementation1.parse(s, parsePosition);
     }
     return implementation2.parse(s, parsePosition);
   }

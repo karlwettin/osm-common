@@ -1,6 +1,5 @@
 package se.kodapan.osm.services.overpass;
 
-import junit.framework.TestCase;
 import se.kodapan.osm.OsmCommonTest;
 import se.kodapan.osm.domain.Node;
 

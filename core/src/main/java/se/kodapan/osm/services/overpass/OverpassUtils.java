@@ -1,18 +1,14 @@
 package se.kodapan.osm.services.overpass;
 
+import se.kodapan.osm.domain.*;
+import se.kodapan.osm.domain.root.PojoRoot;
+import se.kodapan.osm.parser.xml.OsmXmlParserException;
+import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.Collection;
-
-import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.domain.OsmObject;
-import se.kodapan.osm.domain.OsmObjectVisitor;
-import se.kodapan.osm.domain.Relation;
-import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.PojoRoot;
-import se.kodapan.osm.parser.xml.OsmXmlParserException;
-import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 
 /**
  * @author kalle

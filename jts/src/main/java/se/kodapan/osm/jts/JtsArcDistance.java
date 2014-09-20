@@ -28,7 +28,7 @@ public class JtsArcDistance extends ArcDistance {
     double smallestDistance = Double.MAX_VALUE;
     Coordinate[] coordinates = polygon.getCoordinates();
     for (int i = 1; i < coordinates.length; i++) {
-      for (Coordinate interpolated : new LineInterpolation().interpolate(precisionKilometers, coordinates[i-1], coordinates[i])) {
+      for (Coordinate interpolated : new LineInterpolation().interpolate(precisionKilometers, coordinates[i - 1], coordinates[i])) {
         double distance = calculate(interpolated, coordinate);
         if (distance < smallestDistance) {
           smallestDistance = distance;

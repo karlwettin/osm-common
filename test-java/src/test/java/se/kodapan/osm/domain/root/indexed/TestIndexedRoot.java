@@ -57,7 +57,6 @@ public class TestIndexedRoot extends TestCase {
     assertFalse(hits.keySet().contains(building));
 
 
-
     // encloses the building but search for highway
 
     bq = new BooleanQuery();
@@ -69,7 +68,6 @@ public class TestIndexedRoot extends TestCase {
 
     hits = index.search(bq);
     assertFalse(hits.keySet().contains(building));
-
 
 
     // encloses the building

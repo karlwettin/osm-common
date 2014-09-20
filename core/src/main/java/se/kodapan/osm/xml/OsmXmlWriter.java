@@ -1,6 +1,8 @@
 package se.kodapan.osm.xml;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import se.kodapan.osm.domain.*;
+import se.kodapan.osm.domain.root.PojoRoot;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -9,213 +11,205 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import se.kodapan.osm.domain.Node;
-import se.kodapan.osm.domain.OsmObject;
-import se.kodapan.osm.domain.OsmObjectVisitor;
-import se.kodapan.osm.domain.Relation;
-import se.kodapan.osm.domain.RelationMembership;
-import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.PojoRoot;
-
 /**
  * @author kalle
  * @since 2013-09-02 5:03 PM
  */
 public class OsmXmlWriter extends Writer {
 
-    private Writer xml;
-    private String version = "0.6";
-    private Boolean upload = true;
-    private String generator = getClass().getName();
+  private Writer xml;
+  private String version = "0.6";
+  private Boolean upload = true;
+  private String generator = getClass().getName();
 
-    public OsmXmlWriter(Writer xml) throws IOException {
-        this.xml = xml;
-        writeHeader();
+  public OsmXmlWriter(Writer xml) throws IOException {
+    this.xml = xml;
+    writeHeader();
+  }
+
+  public void writeHeader() throws IOException {
+    xml.write("<?xml version='1.0' encoding='UTF-8'?>\n");
+    xml.write("<osm version='");
+    xml.write(version);
+    if (upload != null) {
+      xml.write("' upload='");
+      xml.write(upload ? "true" : "false");
+      xml.write("'");
+    }
+    xml.write(" generator='");
+    xml.write(generator);
+    xml.write("'>\n");
+  }
+
+
+  public void writeFooter() throws IOException {
+    xml.write("</osm>\n");
+  }
+
+
+  public void write(PojoRoot root) throws IOException {
+    for (Node node : root.getNodes().values()) {
+      write(node);
+    }
+    for (Way way : root.getWays().values()) {
+      write(way);
+    }
+    for (Relation relation : root.getRelations().values()) {
+      write(relation);
+    }
+  }
+
+  public void writeTags(OsmObject osmObject) throws IOException {
+    // <tag k='landuse' v='farmland' />
+
+    if (osmObject.getTags() != null) {
+      for (Map.Entry<String, String> tag : osmObject.getTags().entrySet()) {
+        xml.write("\t\t<tag k='");
+        xml.write(tag.getKey());
+        xml.write("' v='");
+        xml.write(StringEscapeUtils.escapeXml(tag.getValue()));
+        xml.write("' />\n");
+      }
+    }
+  }
+
+  public void write(Node node) throws IOException {
+    writeObjectHead(node);
+
+    xml.write(" lat='");
+    xml.write(new DecimalFormat("#.##################################").format(node.getLatitude()));
+    xml.write("'");
+
+    xml.write(" lon='");
+    xml.write(new DecimalFormat("#.##################################").format(node.getLongitude()));
+    xml.write("'");
+
+    xml.write(" >\n");
+
+
+    writeTags(node);
+    xml.write("\t</node>\n");
+
+  }
+
+  public void write(Way way) throws IOException {
+
+    writeObjectHead(way);
+    xml.write(" >\n");
+
+    for (Node node : way.getNodes()) {
+      xml.append("\t\t<nd ref='");
+      xml.append(String.valueOf(node.getId()));
+      xml.append("' />\n");
+      node.getId();
     }
 
-    public void writeHeader() throws IOException {
-        xml.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-        xml.write("<osm version='");
-        xml.write(version);
-        if (upload != null) {
-            xml.write("' upload='");
-            xml.write(upload ? "true" : "false");
-            xml.write("'");
-        }
-        xml.write(" generator='");
-        xml.write(generator);
-        xml.write("'>\n");
+    writeTags(way);
+
+    xml.write("\t</way>\n");
+
+  }
+
+  private OsmObjectVisitor<String> getOsmObjectTypeName = new OsmObjectVisitor<String>() {
+    @Override
+    public String visit(Node node) {
+      return "node";
     }
 
-
-    public void writeFooter() throws IOException {
-        xml.write("</osm>\n");
+    @Override
+    public String visit(Way way) {
+      return "way";
     }
 
-
-    public void write(PojoRoot root) throws IOException {
-        for (Node node : root.getNodes().values()) {
-            write(node);
-        }
-        for (Way way : root.getWays().values()) {
-            write(way);
-        }
-        for (Relation relation : root.getRelations().values()) {
-            write(relation);
-        }
+    @Override
+    public String visit(Relation relation) {
+      return "relation";
     }
+  };
 
-    public void writeTags(OsmObject osmObject) throws IOException {
-        // <tag k='landuse' v='farmland' />
-
-        if (osmObject.getTags() != null) {
-            for (Map.Entry<String, String> tag : osmObject.getTags().entrySet()) {
-                xml.write("\t\t<tag k='");
-                xml.write(tag.getKey());
-                xml.write("' v='");
-                xml.write(StringEscapeUtils.escapeXml(tag.getValue()));
-                xml.write("' />\n");
-            }
-        }
-    }
-
-    public void write(Node node) throws IOException {
-        writeObjectHead(node);
-
-        xml.write(" lat='");
-        xml.write(new DecimalFormat("#.##################################").format(node.getLatitude()));
-        xml.write("'");
-
-        xml.write(" lon='");
-        xml.write(new DecimalFormat("#.##################################").format(node.getLongitude()));
-        xml.write("'");
-
-        xml.write(" >\n");
-
-
-        writeTags(node);
-        xml.write("\t</node>\n");
-
-    }
-
-    public void write(Way way) throws IOException {
-
-        writeObjectHead(way);
-        xml.write(" >\n");
-
-        for (Node node : way.getNodes()) {
-            xml.append("\t\t<nd ref='");
-            xml.append(String.valueOf(node.getId()));
-            xml.append("' />\n");
-            node.getId();
-        }
-
-        writeTags(way);
-
-        xml.write("\t</way>\n");
-
-    }
-
-    private OsmObjectVisitor<String> getOsmObjectTypeName = new OsmObjectVisitor<String>() {
-        @Override
-        public String visit(Node node) {
-            return "node";
-        }
-
-        @Override
-        public String visit(Way way) {
-            return "way";
-        }
-
-        @Override
-        public String visit(Relation relation) {
-            return "relation";
-        }
-    };
-
-    public void write(Relation relation) throws IOException {
+  public void write(Relation relation) throws IOException {
 
 // <relation id='3146471' timestamp='2013-08-16T01:39:33Z' uid='194367' user='Karl Wettin' visible='true' version='1' changeset='17366616'>
 
-        writeObjectHead(relation);
-        xml.write(" >\n");
+    writeObjectHead(relation);
+    xml.write(" >\n");
 
 
-        for (RelationMembership membership : relation.getMembers()) {
+    for (RelationMembership membership : relation.getMembers()) {
 
-            xml.write("\t\t<member type='");
-            xml.write(membership.getObject().accept(getOsmObjectTypeName));
-            xml.write("'");
+      xml.write("\t\t<member type='");
+      xml.write(membership.getObject().accept(getOsmObjectTypeName));
+      xml.write("'");
 
-            xml.write(" ref='");
-            xml.write(String.valueOf(membership.getObject().getId()));
-            xml.write("'");
+      xml.write(" ref='");
+      xml.write(String.valueOf(membership.getObject().getId()));
+      xml.write("'");
 
-            xml.write(" role='");
-            xml.write(membership.getRole());
-            xml.write("'");
+      xml.write(" role='");
+      xml.write(membership.getRole());
+      xml.write("'");
 
 
-            xml.write(" />\n");
-        }
-
-        writeTags(relation);
-
-        xml.write("\t</relation>\n");
+      xml.write(" />\n");
     }
 
-    private void writeObjectHead(OsmObject osmObject) throws IOException {
-        xml.write("\t<");
-        xml.append(osmObject.accept(getOsmObjectTypeName));
-        xml.write(" ");
-        xml.write(" id='");
-        xml.write(String.valueOf(osmObject.getId()));
-        xml.write("'");
-        if (osmObject.getId() > -1) {
-            xml.write(" timestamp='");
-            xml.write(new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ").format(new Date(osmObject.getTimestamp())));
-            xml.write("'");
+    writeTags(relation);
 
-            xml.write(" uid='");
-            xml.write(String.valueOf(osmObject.getUid()));
-            xml.write("'");
+    xml.write("\t</relation>\n");
+  }
 
-            xml.write(" user='");
-            xml.write(String.valueOf(osmObject.getUser()));
-            xml.write("'");
+  private void writeObjectHead(OsmObject osmObject) throws IOException {
+    xml.write("\t<");
+    xml.append(osmObject.accept(getOsmObjectTypeName));
+    xml.write(" ");
+    xml.write(" id='");
+    xml.write(String.valueOf(osmObject.getId()));
+    xml.write("'");
+    if (osmObject.getId() > -1) {
+      xml.write(" timestamp='");
+      xml.write(new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ").format(new Date(osmObject.getTimestamp())));
+      xml.write("'");
 
-            xml.write(" version='");
-            xml.write(String.valueOf(osmObject.getVersion()));
-            xml.write("'");
+      xml.write(" uid='");
+      xml.write(String.valueOf(osmObject.getUid()));
+      xml.write("'");
 
-            xml.write(" changeset='");
-            xml.write(String.valueOf(osmObject.getChangeset()));
-            xml.write("'");
+      xml.write(" user='");
+      xml.write(String.valueOf(osmObject.getUser()));
+      xml.write("'");
 
-        }
+      xml.write(" version='");
+      xml.write(String.valueOf(osmObject.getVersion()));
+      xml.write("'");
+
+      xml.write(" changeset='");
+      xml.write(String.valueOf(osmObject.getChangeset()));
+      xml.write("'");
+
     }
+  }
 
 
-    private boolean wroteHeader = false;
+  private boolean wroteHeader = false;
 
-    @Override
-    public synchronized void write(char[] cbuf, int off, int len) throws IOException {
-        if (!wroteHeader) {
-            wroteHeader = true;
-            writeHeader();
-        }
-        xml.write(cbuf, off, len);
+  @Override
+  public synchronized void write(char[] cbuf, int off, int len) throws IOException {
+    if (!wroteHeader) {
+      wroteHeader = true;
+      writeHeader();
     }
+    xml.write(cbuf, off, len);
+  }
 
-    @Override
-    public void flush() throws IOException {
-        xml.flush();
-    }
+  @Override
+  public void flush() throws IOException {
+    xml.flush();
+  }
 
-    @Override
-    public void close() throws IOException {
-        writeFooter();
-        xml.close();
-    }
+  @Override
+  public void close() throws IOException {
+    writeFooter();
+    xml.close();
+  }
 
 }

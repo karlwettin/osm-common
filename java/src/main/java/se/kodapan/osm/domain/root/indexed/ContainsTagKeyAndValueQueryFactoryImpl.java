@@ -14,7 +14,7 @@ public class ContainsTagKeyAndValueQueryFactoryImpl extends ContainsTagKeyAndVal
     if (getKey() == null || getValue() == null) {
       throw new NullPointerException();
     }
-    return new TermQuery(new Term("tag.key_and_value", getKey()+ "=" + getValue()));
+    return new TermQuery(new Term("tag.key_and_value", getKey() + "=" + getValue()));
   }
 
 }

@@ -21,6 +21,7 @@ public class PojoRoot extends AbstractRoot implements Serializable {
   public Enumerator<Node> enumerateNodes() {
     return new Enumerator<Node>() {
       Iterator<Map.Entry<Long, Node>> iterator = getNodes().entrySet().iterator();
+
       @Override
       public Node next() {
         return iterator.hasNext() ? iterator.next().getValue() : null;
@@ -32,6 +33,7 @@ public class PojoRoot extends AbstractRoot implements Serializable {
   public Enumerator<Way> enumerateWays() {
     return new Enumerator<Way>() {
       Iterator<Map.Entry<Long, Way>> iterator = getWays().entrySet().iterator();
+
       @Override
       public Way next() {
         return iterator.hasNext() ? iterator.next().getValue() : null;
@@ -43,6 +45,7 @@ public class PojoRoot extends AbstractRoot implements Serializable {
   public Enumerator<Relation> enumerateRelations() {
     return new Enumerator<Relation>() {
       Iterator<Map.Entry<Long, Relation>> iterator = getRelations().entrySet().iterator();
+
       @Override
       public Relation next() {
         return iterator.hasNext() ? iterator.next().getValue() : null;

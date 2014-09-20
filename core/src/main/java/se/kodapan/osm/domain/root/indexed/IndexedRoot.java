@@ -1,17 +1,17 @@
 package se.kodapan.osm.domain.root.indexed;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.Set;
-
 import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.OsmObject;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.Way;
 import se.kodapan.osm.domain.root.AbstractRoot;
 import se.kodapan.osm.domain.root.Root;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by kalle on 10/19/13.
@@ -104,6 +104,7 @@ public abstract class IndexedRoot<Query> extends AbstractRoot {
 
   /**
    * Reconstructs the whole index from scratch.
+   *
    * @param numberOfThreads number of threads used to write to index
    */
   public abstract void reconstruct(int numberOfThreads) throws IOException;
@@ -114,6 +115,7 @@ public abstract class IndexedRoot<Query> extends AbstractRoot {
 
   /**
    * Commits and changes to the index and makes it available for queries.
+   *
    * @throws IOException
    */
   public abstract void commit() throws IOException;

@@ -2,7 +2,6 @@ package se.kodapan.osm.parser.xml.instantiated;
 
 
 import android.util.Xml;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;

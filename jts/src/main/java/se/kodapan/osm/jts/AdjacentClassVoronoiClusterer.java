@@ -8,8 +8,8 @@ import se.kodapan.osm.domain.Node;
 import se.kodapan.osm.domain.Relation;
 import se.kodapan.osm.domain.RelationMembership;
 import se.kodapan.osm.domain.Way;
-import se.kodapan.osm.domain.root.Root;
 import se.kodapan.osm.domain.root.PojoRoot;
+import se.kodapan.osm.domain.root.Root;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Takes a number of points per class
  * and create polygons per class
  * joined together on class where adjacent with each other
- *
+ * <p/>
  * This could for instance be used to create polygons
  * that describe postal town and postal code limits.
  *

@@ -78,7 +78,6 @@ public class WMS extends SlippyMap {
     }
 
 
-
   }
 
 }

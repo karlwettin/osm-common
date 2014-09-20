@@ -1,112 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>se.kodapan.osm.common</groupId>
-    <artifactId>common-parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+  <groupId>se.kodapan.osm.common</groupId>
+  <artifactId>common-parent</artifactId>
+  <version>0.0.2</version>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <modules>
-        <module>core</module>
-        <module>java</module>
-        <!--
-        Android module requires an Android framework
-        and will not compile using standard Java.
-        -->
-        <!--<module>android</module>-->
-        <module>jts</module>
-        <module>test-java</module>
-        <module>tools</module>
-    </modules>
+  <modules>
+    <module>core</module>
+    <module>java</module>
+    <!--
+    Android module requires an Android framework
+    and will not compile using standard Java.
+    -->
+    <!--<module>android</module>-->
+    <module>jts</module>
+    <module>test-java</module>
+    <module>tools</module>
+  </modules>
 
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.5</version>
-            </dependency>
-
-            <dependency>
-                <scope>test</scope>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.0.13</version>
-            </dependency>
-
-            <dependency>
-                <scope>test</scope>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.5</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.5</version>
+      </dependency>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+      <dependency>
+        <scope>test</scope>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.0.13</version>
+      </dependency>
+
+      <dependency>
+        <scope>test</scope>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.5</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
 
-        </plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-    </build>
 
-    <developers>
-        <developer>
-            <id>kalle</id>
-            <name>Karl Wettin</name>
-            <email>karl.wettin@kodapan.se</email>
-            <organization>Kodapan</organization>
-            <organizationUrl>http://kodapan.se</organizationUrl>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <developers>
+    <developer>
+      <id>kalle</id>
+      <name>Karl Wettin</name>
+      <email>karl.wettin@kodapan.se</email>
+      <organization>Kodapan</organization>
+      <organizationUrl>http://kodapan.se</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 
 </project>

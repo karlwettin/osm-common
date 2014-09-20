@@ -1,6 +1,6 @@
 package se.kodapan.osm.util.distance;
 
-import se.kodapan.osm.domain.*;
+import se.kodapan.osm.domain.Node;
 
 /**
  * @author kalle
@@ -13,14 +13,12 @@ public abstract class Distance {
   }
 
   /**
-   *
    * @param latitudeA
    * @param longitudeA
    * @param latitudeB
    * @param longitudeB
    */
   public abstract double calculate(double latitudeA, double longitudeA, double latitudeB, double longitudeB);
-
 
 
 }

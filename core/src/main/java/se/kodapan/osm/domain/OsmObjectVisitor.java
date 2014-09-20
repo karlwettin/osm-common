@@ -7,7 +7,9 @@ package se.kodapan.osm.domain;
 public interface OsmObjectVisitor<R> {
 
   public R visit(Node node);
+
   public R visit(Way way);
+
   public R visit(Relation relation);
 
 }

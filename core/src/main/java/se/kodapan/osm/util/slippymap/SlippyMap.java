@@ -24,10 +24,10 @@ public abstract class SlippyMap {
 
   public Iterator<Tile> iterateTiles(double southLatitude, double westLongitude, double northLatitude, double eastLongitude, int z) {
     // todo for those very large tile iterations. should of course not create a list first...
-    return listTiles(southLatitude,westLongitude, northLatitude, eastLongitude, z).iterator();
+    return listTiles(southLatitude, westLongitude, northLatitude, eastLongitude, z).iterator();
   }
 
-    @Deprecated
+  @Deprecated
   public abstract List<Tile> listTiles(double southLatitude, double westLongitude, double northLatitude, double eastLongitude, int z);
 
   public String toURL(Tile tile) {

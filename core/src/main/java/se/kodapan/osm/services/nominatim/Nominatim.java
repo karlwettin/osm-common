@@ -2,9 +2,7 @@ package se.kodapan.osm.services.nominatim;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import se.kodapan.osm.services.HttpService;
 
 import java.io.InputStreamReader;

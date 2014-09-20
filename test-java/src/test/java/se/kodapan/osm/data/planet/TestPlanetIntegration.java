@@ -1,6 +1,5 @@
 package se.kodapan.osm.data.planet;
 
-import junit.framework.TestCase;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -10,9 +9,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kodapan.osm.OsmCommonTest;
+import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 import se.kodapan.osm.services.changesetstore.ChangesetStore;
 import se.kodapan.osm.services.changesetstore.ChangesetStoreState;
-import se.kodapan.osm.parser.xml.instantiated.InstantiatedOsmXmlParser;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,7 +21,7 @@ import java.util.Date;
 
 /**
  * This test downloads a dump of malta since a few days back and then applies the changesets.
- *
+ * <p/>
  * todo this fails some days, that data i dump has a greater version than data in changeset.
  * todo is this due to osm-common not supporting such a feature (multiple changes merged to a single one in daily changeset?)
  * todo or is it due to geofrabrik not doing the right thing? probably not the latter.
@@ -68,7 +67,7 @@ public class TestPlanetIntegration extends OsmCommonTest {
         reader.close();
         break;
       } catch (IOException e) {
-        log.warn("Ignoring bad file found at " +  get.getURI(), e);
+        log.warn("Ignoring bad file found at " + get.getURI(), e);
         continue;
       } finally {
         EntityUtils.consume(httpResponse.getEntity());
