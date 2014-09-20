@@ -9,7 +9,6 @@
       <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>core</artifactId>
-    <version>${project.parent.version}</version>
 
     <packaging>jar</packaging>
 
