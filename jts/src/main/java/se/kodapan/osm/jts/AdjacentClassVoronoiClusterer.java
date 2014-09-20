@@ -532,5 +532,11 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
     return counter;
   }
 
+  public int getNumberOfThreads() {
+    return numberOfThreads;
+  }
 
+  public void setNumberOfThreads(int numberOfThreads) {
+    this.numberOfThreads = numberOfThreads;
+  }
 }
