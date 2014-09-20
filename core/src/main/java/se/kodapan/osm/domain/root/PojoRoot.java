@@ -113,9 +113,6 @@ public class PojoRoot extends AbstractRoot implements Serializable {
 
       if (way.getNodes() != null) {
         for (Node node : way.getNodes()) {
-          if (node.getWaysMemberships() == null) {
-            System.currentTimeMillis();
-          }
           node.getWaysMemberships().remove(way);
           affectedRelations.add(node);
         }

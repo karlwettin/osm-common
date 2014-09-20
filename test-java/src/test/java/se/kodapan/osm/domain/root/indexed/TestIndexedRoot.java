@@ -136,10 +136,6 @@ public class TestIndexedRoot extends TestCase {
     hits = index.search(bq);
     assertTrue(hits.keySet().contains(building));
 
-
-    System.currentTimeMillis();
-
-
     index.close();
 
 

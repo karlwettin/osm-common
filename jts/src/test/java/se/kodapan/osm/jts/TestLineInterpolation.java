@@ -40,9 +40,6 @@ public class TestLineInterpolation extends TestCase {
     assertEquals(a.getY(), coordinates.get(2).y);
 
 
-    System.currentTimeMillis();
-
-
   }
 
 }

@@ -42,8 +42,6 @@ public class TestInstantiatedOsmXmlParser extends TestCase {
     assertEquals(36393, root.getNodes().size());
     assertEquals(4103, root.getWays().size());
     assertEquals(87, root.getRelations().size());
-
-    System.currentTimeMillis();
   }
 
   public void testMalmoe() throws Exception {
@@ -98,7 +96,6 @@ public class TestInstantiatedOsmXmlParser extends TestCase {
       }
     }
 
-    System.currentTimeMillis();
   }
 
 }

@@ -68,8 +68,6 @@ public class NominatimJsonResponseParser {
       result.setObject(existing != null ? existing : object);
       results.add(result);
       root.add(object);
-
-      System.currentTimeMillis();
     }
 
 

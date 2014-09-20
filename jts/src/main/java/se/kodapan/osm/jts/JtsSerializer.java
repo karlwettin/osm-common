@@ -26,9 +26,6 @@ public class JtsSerializer {
   }
 
   public void writePolygon(Polygon polygon, ObjectOutputStream out) throws IOException {
-    if (polygon == null || polygon.getCoordinates() == null || polygon.getCoordinates().length == 0) {
-      System.currentTimeMillis();
-    }
     for (Coordinate coordinate : polygon.getCoordinates()) {
       out.writeBoolean(true);
       out.writeDouble(coordinate.x);

@@ -35,8 +35,6 @@ public class TestJsonMarshaller extends TestCase {
 
 //      Node unmarshalled = unmarshaller.deserializeNode(marshalled.toString());
 
-      System.currentTimeMillis();
-
     }
 
   }

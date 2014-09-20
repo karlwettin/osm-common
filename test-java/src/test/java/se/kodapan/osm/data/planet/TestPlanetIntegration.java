@@ -91,8 +91,6 @@ public class TestPlanetIntegration extends OsmCommonTest {
       }
     }
 
-    System.currentTimeMillis();
-
     // todo it would be nice if the test also downloaded the dump representing after applying the changesets and assert they equal.
 
   }

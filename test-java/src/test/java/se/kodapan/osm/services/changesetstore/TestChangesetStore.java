@@ -79,7 +79,6 @@ public class TestChangesetStore extends OsmCommonTest {
     } finally {
       changesetReader.close();
     }
-    System.currentTimeMillis();
   }
 
   public void testParseState() throws Exception {

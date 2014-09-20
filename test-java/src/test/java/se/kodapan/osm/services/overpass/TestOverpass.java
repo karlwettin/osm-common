@@ -44,7 +44,6 @@ public class TestOverpass extends OsmCommonTest {
     Way magnusStenbocksVäg = overpassUtils.loadWay(43153974l);
     Relation sweden = overpassUtils.loadRelation(52822l);
 
-    System.currentTimeMillis();
 
   }
 
