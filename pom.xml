@@ -25,6 +25,30 @@
   <dependencyManagement>
     <dependencies>
 
+      <dependency>
+        <groupId>se.kodapan.osm.common</groupId>
+        <artifactId>core</artifactId>
+        <version>0.0.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>se.kodapan.osm.common</groupId>
+        <artifactId>java</artifactId>
+        <version>0.0.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>se.kodapan.osm.common</groupId>
+        <artifactId>tools</artifactId>
+        <version>0.0.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>se.kodapan.osm.common</groupId>
+        <artifactId>jts</artifactId>
+        <version>0.0.2</version>
+      </dependency>
+
 
       <dependency>
         <groupId>org.slf4j</groupId>
