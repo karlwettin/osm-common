@@ -38,33 +38,6 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
   private int numberOfThreads = 16;
 
-  private boolean bound = false;
-  private double boundsLatitudeSouth;
-  private double boundsLongitudeWest;
-  private double boundsLatitudeNorth;
-  private double boundsLongitudeEast;
-
-  public void setBounds(double latitudeSouth, double longitudeWest, double latitudeNorth, double longitudeEast) {
-    bound = true;
-    this.boundsLatitudeSouth = latitudeSouth;
-    this.boundsLongitudeWest = longitudeWest;
-    this.boundsLatitudeNorth = latitudeNorth;
-    this.boundsLongitudeEast = longitudeEast;
-  }
-
-
-  private boolean isBound(Coordinate coordinate) {
-    return isBound(coordinate.y, coordinate.x);
-  }
-
-  private boolean isBound(double latitude, double longitude) {
-    return !bound
-        || latitude >= this.boundsLatitudeSouth
-        && latitude <= this.boundsLatitudeNorth
-        && longitude >= this.boundsLongitudeWest
-        && longitude <= this.boundsLongitudeEast;
-  }
-
   private Map<ClassType, Set<Coordinate>> coordinatesByClass = new HashMap<ClassType, Set<Coordinate>>();
 
 
@@ -144,9 +117,6 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
 
     VoronoiDiagramBuilder voronoiBuilder = new VoronoiDiagramBuilder();
     voronoiBuilder.setSites(voronoiSites);
-    if (bound) {
-      voronoiBuilder.setClipEnvelope(new Envelope(boundsLongitudeWest, boundsLongitudeEast, boundsLatitudeSouth, boundsLatitudeNorth));
-    }
 
     GeometryCollection voronoiRegions = (GeometryCollection) voronoiBuilder.getDiagram(factory);
 
@@ -373,9 +343,6 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
   }
 
   public void addCoordinate(ClassType _class, Coordinate coordinate) {
-    if (!isBound(coordinate)) {
-      return;
-    }
     Set<Coordinate> coordinates = coordinatesByClass.get(_class);
     if (coordinates == null) {
       coordinates = new HashSet<Coordinate>();
