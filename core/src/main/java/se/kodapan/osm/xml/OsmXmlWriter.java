@@ -167,7 +167,7 @@ public class OsmXmlWriter extends Writer {
     xml.write("'");
     if (osmObject.getId() > -1) {
       xml.write(" timestamp='");
-      xml.write(new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ").format(new Date(osmObject.getTimestamp())));
+      xml.write(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date(osmObject.getTimestamp())));
       xml.write("'");
 
       xml.write(" uid='");
