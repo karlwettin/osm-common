@@ -16,6 +16,8 @@ public abstract class QueryFactories<Query> {
 
   public abstract NodeEnvelopeQueryFactory<Query> nodeEnvelopeQueryFactory();
 
+  public abstract NodeRadialEnvelopeQueryFactory<Query> nodeRadialEnvelopeQueryFactory();
+
   public abstract WayEnvelopeQueryFactory<Query> wayEnvelopeQueryFactory();
 
 }

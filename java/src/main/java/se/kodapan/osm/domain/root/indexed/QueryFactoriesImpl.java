@@ -29,6 +29,11 @@ public class QueryFactoriesImpl extends QueryFactories<Query> {
   }
 
   @Override
+  public NodeRadialEnvelopeQueryFactory<Query> nodeRadialEnvelopeQueryFactory() {
+    return new NodeRadialEnvelopeQueryFactoryImpl();
+  }
+
+  @Override
   public WayEnvelopeQueryFactory<Query> wayEnvelopeQueryFactory() {
     return new WayEnvelopeQueryFactoryImpl();
   }
