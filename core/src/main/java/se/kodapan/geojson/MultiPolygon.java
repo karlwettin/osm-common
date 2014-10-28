@@ -28,6 +28,23 @@ public class MultiPolygon extends GeoJSONGeometry {
   private List<Polygon> polygons = new ArrayList<Polygon>();
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MultiPolygon that = (MultiPolygon) o;
+
+    if (polygons != null ? !polygons.equals(that.polygons) : that.polygons != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return polygons != null ? polygons.hashCode() : 0;
+  }
+
+  @Override
   public void writeJSON(Writer writer) throws IOException {
     writer.write("{");
     writer.write("\"type\":\"MultiPoint\",\"coordinates\":[");

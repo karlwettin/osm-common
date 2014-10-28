@@ -27,6 +27,23 @@ public class MultiLineString extends GeoJSONGeometry {
   private List<LineString> lineStrings = new ArrayList<LineString>();
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MultiLineString that = (MultiLineString) o;
+
+    if (lineStrings != null ? !lineStrings.equals(that.lineStrings) : that.lineStrings != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return lineStrings != null ? lineStrings.hashCode() : 0;
+  }
+
+  @Override
   public void writeJSON(Writer writer) throws IOException {
     writer.write("{");
     writer.write("\"type\":\"\",\"coordinates\":[");

@@ -35,6 +35,26 @@ public class Feature extends GeoJSONObject {
     writer.write("}");
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Feature feature = (Feature) o;
+
+    if (geometry != null ? !geometry.equals(feature.geometry) : feature.geometry != null) return false;
+    if (properties != null ? !properties.equals(feature.properties) : feature.properties != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = geometry != null ? geometry.hashCode() : 0;
+    result = 31 * result + (properties != null ? properties.hashCode() : 0);
+    return result;
+  }
+
   public GeoJSONGeometry getGeometry() {
     return geometry;
   }

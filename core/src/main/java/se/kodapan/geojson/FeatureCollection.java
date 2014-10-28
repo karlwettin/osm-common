@@ -31,6 +31,23 @@ public class FeatureCollection extends GeoJSONObject {
     writer.write("]}");
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    FeatureCollection that = (FeatureCollection) o;
+
+    if (features != null ? !features.equals(that.features) : that.features != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return features != null ? features.hashCode() : 0;
+  }
+
   public List<Feature> getFeatures() {
     return features;
   }

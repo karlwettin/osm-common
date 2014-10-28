@@ -43,4 +43,21 @@ public class MultiPoint extends GeoJSONGeometry {
   public void setCoordinates(List<Point> coordinates) {
     this.coordinates = coordinates;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    MultiPoint that = (MultiPoint) o;
+
+    if (coordinates != null ? !coordinates.equals(that.coordinates) : that.coordinates != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return coordinates != null ? coordinates.hashCode() : 0;
+  }
 }

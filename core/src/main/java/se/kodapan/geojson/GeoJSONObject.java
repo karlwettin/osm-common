@@ -22,4 +22,9 @@ public abstract class GeoJSONObject {
 
   public abstract void writeJSON(Writer writer) throws IOException;
 
+  @Override
+  public abstract boolean equals(Object obj);
+
+  @Override
+  public abstract int hashCode();
 }

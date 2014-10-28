@@ -41,6 +41,26 @@ public class Polygon extends GeoJSONGeometry {
   private List<List<Point>> holes = new ArrayList<List<Point>>();
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Polygon polygon = (Polygon) o;
+
+    if (holes != null ? !holes.equals(polygon.holes) : polygon.holes != null) return false;
+    if (hull != null ? !hull.equals(polygon.hull) : polygon.hull != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = hull != null ? hull.hashCode() : 0;
+    result = 31 * result + (holes != null ? holes.hashCode() : 0);
+    return result;
+  }
+
+  @Override
   public void writeJSON(Writer writer) throws IOException {
     writer.write("{");
     writer.write("\"type\":\"Polygon\",\"coordinates\":");

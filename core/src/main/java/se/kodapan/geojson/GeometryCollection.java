@@ -50,4 +50,21 @@ public class GeometryCollection extends GeoJSONGeometry {
   public void setGeometries(List<GeoJSONGeometry> geometries) {
     this.geometries = geometries;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    GeometryCollection that = (GeometryCollection) o;
+
+    if (geometries != null ? !geometries.equals(that.geometries) : that.geometries != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return geometries != null ? geometries.hashCode() : 0;
+  }
 }
