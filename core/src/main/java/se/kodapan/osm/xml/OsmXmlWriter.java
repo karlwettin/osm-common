@@ -47,6 +47,42 @@ public class OsmXmlWriter extends Writer {
   }
 
 
+  private OsmObjectVisitor<Void> writeVisitor = new OsmObjectVisitor<Void>() {
+    @Override
+    public Void visit(Node node) {
+      try {
+        write(node);
+      } catch (IOException ioe) {
+        throw new RuntimeException(ioe);
+      }
+      return null;
+    }
+
+    @Override
+    public Void visit(Way way) {
+      try {
+        write(way);
+      } catch (IOException ioe) {
+        throw new RuntimeException(ioe);
+      }
+      return null;
+    }
+
+    @Override
+    public Void visit(Relation relation) {
+      try {
+        write(relation);
+      } catch (IOException ioe) {
+        throw new RuntimeException(ioe);
+      }
+      return null;
+    }
+  };
+
+  public void write(OsmObject object) throws IOException {
+    object.accept(writeVisitor);
+  }
+
   public void write(PojoRoot root) throws IOException {
     for (Node node : root.getNodes().values()) {
       write(node);
@@ -161,32 +197,43 @@ public class OsmXmlWriter extends Writer {
   private void writeObjectHead(OsmObject osmObject) throws IOException {
     xml.write("\t<");
     xml.append(osmObject.accept(getOsmObjectTypeName));
-    xml.write(" ");
-    xml.write(" id='");
-    xml.write(String.valueOf(osmObject.getId()));
-    xml.write("'");
-    if (osmObject.getId() > -1) {
+
+    if (osmObject.getId() != null) {
+      xml.write(" id='");
+      xml.write(String.valueOf(osmObject.getId()));
+      xml.write("'");
+    }
+
+    if (osmObject.getTimestamp() != null) {
       xml.write(" timestamp='");
       xml.write(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date(osmObject.getTimestamp())));
       xml.write("'");
+    }
 
+    if (osmObject.getUid() != null) {
       xml.write(" uid='");
       xml.write(String.valueOf(osmObject.getUid()));
       xml.write("'");
+    }
 
+    if (osmObject.getUser() != null) {
       xml.write(" user='");
       xml.write(String.valueOf(osmObject.getUser()));
       xml.write("'");
+    }
 
+    if (osmObject.getVersion() != null) {
       xml.write(" version='");
       xml.write(String.valueOf(osmObject.getVersion()));
       xml.write("'");
+    }
 
+    if (osmObject.getChangeset() != null) {
       xml.write(" changeset='");
       xml.write(String.valueOf(osmObject.getChangeset()));
       xml.write("'");
-
     }
+
   }
 
 

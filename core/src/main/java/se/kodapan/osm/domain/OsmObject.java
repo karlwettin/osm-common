@@ -21,7 +21,7 @@ public abstract class OsmObject implements Serializable {
    */
   private boolean loaded;
 
-  private long id;
+  private Long id;
 
   private Map<String, String> attributes;
 
@@ -127,11 +127,11 @@ public abstract class OsmObject implements Serializable {
     this.visible = visible;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
