@@ -171,22 +171,24 @@ public class OsmXmlWriter extends Writer {
     xml.write(" >\n");
 
 
-    for (RelationMembership membership : relation.getMembers()) {
+    if (relation.getMembers() != null) {
+      for (RelationMembership membership : relation.getMembers()) {
 
-      xml.write("\t\t<member type='");
-      xml.write(membership.getObject().accept(getOsmObjectTypeName));
-      xml.write("'");
+        xml.write("\t\t<member type='");
+        xml.write(membership.getObject().accept(getOsmObjectTypeName));
+        xml.write("'");
 
-      xml.write(" ref='");
-      xml.write(String.valueOf(membership.getObject().getId()));
-      xml.write("'");
+        xml.write(" ref='");
+        xml.write(String.valueOf(membership.getObject().getId()));
+        xml.write("'");
 
-      xml.write(" role='");
-      xml.write(membership.getRole());
-      xml.write("'");
+        xml.write(" role='");
+        xml.write(membership.getRole());
+        xml.write("'");
 
 
-      xml.write(" />\n");
+        xml.write(" />\n");
+      }
     }
 
     writeTags(relation);
