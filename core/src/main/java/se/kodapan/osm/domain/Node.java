@@ -17,6 +17,33 @@ public class Node extends OsmObject implements Serializable {
     return visitor.visit(this);
   }
 
+  public Node() {
+  }
+
+  public Node(double latitude, double longitude) {
+    this.latitude = latitude;
+    this.longitude= longitude;
+  }
+
+  public Node(Long id, double latitude, double longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    setId(id);
+  }
+
+  public Node(double latitude, double longitude, String... tags) {
+    this((Long)null, latitude, longitude, tags);
+  }
+
+  public Node(Long id, double latitude, double longitude, String... tags) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    setId(id);
+    for (int i=0; i<tags.length; i+=2) {
+      setTag(tags[i], tags[i+1]);
+    }
+  }
+
   private double latitude;
   private double longitude;
 

@@ -1,10 +1,7 @@
 package se.kodapan.osm.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author kalle
@@ -90,7 +87,7 @@ public abstract class OsmObject implements Serializable {
 
   public String setTag(String key, String value) {
     if (tags == null) {
-      tags = new HashMap<String, String>(5);
+      tags = new LinkedHashMap<String, String>(5);
     }
     return tags.put(key, value);
   }

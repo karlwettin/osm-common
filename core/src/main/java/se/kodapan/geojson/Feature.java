@@ -35,6 +35,7 @@ public class Feature extends GeoJSONObject {
     writer.write("}");
   }
 
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

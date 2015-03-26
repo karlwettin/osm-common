@@ -1,5 +1,8 @@
 package se.kodapan.geojson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;

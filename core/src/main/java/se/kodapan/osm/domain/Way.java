@@ -19,6 +19,13 @@ public class Way extends OsmObject implements Serializable {
     return visitor.visit(this);
   }
 
+  public Way() {
+  }
+
+  public Way(Long id) {
+    setId(id);
+  }
+
   private List<Node> nodes;
 
   /**
@@ -31,11 +38,12 @@ public class Way extends OsmObject implements Serializable {
     return getNodes().size() > 2 && getNodes().get(0).equals(getNodes().get(getNodes().size() - 1));
   }
 
-  public void addNode(Node node) {
+  public Way addNode(Node node) {
     if (nodes == null) {
       nodes = new ArrayList<Node>(50);
     }
     nodes.add(node);
+    return this;
   }
 
   public List<Node> getNodes() {
