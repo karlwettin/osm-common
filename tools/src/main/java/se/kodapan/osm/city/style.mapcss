@@ -1,0 +1,31 @@
+way[class] {
+   width: 1;
+   color: black;
+   opacity: 1;
+   fill-opacity: 1;
+   font-size: 16;
+   text-color: black;
+   text: class;
+   text-position: center;
+}
+way[class=vatten] {
+  fill-color: blue;
+}
+way[class=bostad] {
+  fill-color: orange;
+}
+way[class=centrum] {
+  fill-color: grey;
+}
+way[class=park] {
+  fill-color: green;
+}
+way[class=landsbygd] {
+   fill-color: yellow;
+}
+way[class=industri] {
+  fill-color: black;
+}
+way[class=tatort] {
+  fill-color: white;
+}
