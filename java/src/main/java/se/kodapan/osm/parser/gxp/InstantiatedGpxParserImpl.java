@@ -1,5 +1,4 @@
-package se.kodapan.osm.parser.xml.instantiated;
-
+package se.kodapan.osm.parser.gxp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,18 +10,12 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
 
 /**
- * An .osm.xml and .osc.xml parser
- * into a fully instantiated object graph.
- * <p/>
- * This class is not thread safe!
- *
  * @author kalle
- * @since 2013-03-27 21:41
+ * @since 2015-08-11 18:30
  */
-public class InstantiatedOsmXmlParserImpl extends AbstractStreamingInstantiatedOsmXmlParser {
+public class InstantiatedGpxParserImpl extends AbstractInstantiatedGpxParser {
 
-
-  private static final Logger log = LoggerFactory.getLogger(InstantiatedOsmXmlParserImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(InstantiatedGpxParserImpl.class);
 
 
   private XMLInputFactory xmlif = XMLInputFactory.newInstance();
@@ -96,6 +89,25 @@ public class InstantiatedOsmXmlParserImpl extends AbstractStreamingInstantiatedO
       }
 
       @Override
+      public String getElementText() throws StreamException {
+        try {
+          return xmlr.getElementText();
+        } catch (XMLStreamException e) {
+          throw new StreamException(e);
+        }
+      }
+
+      @Override
+      public char[] getCharacters() throws StreamException {
+        return xmlr.getTextCharacters();
+      }
+
+      @Override
+      public boolean isCharacters(int eventType) throws StreamException {
+        return eventType == XMLStreamConstants.CHARACTERS;
+      }
+
+      @Override
       public void close() throws StreamException {
         try {
           xmlr.close();
@@ -106,5 +118,5 @@ public class InstantiatedOsmXmlParserImpl extends AbstractStreamingInstantiatedO
     };
   }
 
-}
 
+}
