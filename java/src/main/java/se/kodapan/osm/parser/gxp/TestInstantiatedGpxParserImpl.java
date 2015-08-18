@@ -9,8 +9,8 @@ import java.io.FileReader;
 public class TestInstantiatedGpxParserImpl {
 
   public static void main(String[] args) throws Exception {
-    InstantiatedGpxParserImpl parser = new InstantiatedGpxParserImpl();
-    Gpx gpx = parser.parse(new FileReader("/Users/kalle/projekt/kodapan/gitlab.kodapan.se/fm-gps/java/rtl_power/gpx/11_aug_2015_16;15;32_2015-08-11_16-15-32.gpx"));
+
+    Gpx gpx = new InstantiatedGpxParserImpl().parse(new FileReader("/Users/kalle/projekt/kodapan/gitlab.kodapan.se/fm-gps/java/rtl_power/gpx/11_aug_2015_16;15;32_2015-08-11_16-15-32.gpx"));
     System.currentTimeMillis();
 
   }
