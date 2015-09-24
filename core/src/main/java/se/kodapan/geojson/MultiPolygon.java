@@ -47,7 +47,7 @@ public class MultiPolygon extends GeoJSONGeometry {
   @Override
   public void writeJSON(Writer writer) throws IOException {
     writer.write("{");
-    writer.write("\"type\":\"MultiPoint\",\"coordinates\":[");
+    writer.write("\"type\":\"MultiPolygon\",\"coordinates\":[");
     for (Iterator<Polygon> polygons = getPolygons().iterator(); polygons.hasNext(); ) {
       polygons.next().writePolygonPart(writer);
       if (polygons.hasNext()) {
