@@ -8,6 +8,9 @@ public abstract class Tile {
 
   private int x, y, z;
 
+  protected Tile() {
+
+  }
 
   protected Tile(int x, int y, int z) {
     this.x = x;
@@ -51,6 +54,18 @@ public abstract class Tile {
 
   public int getZ() {
     return z;
+  }
+
+  protected void setX(int x) {
+    this.x = x;
+  }
+
+  protected void setY(int y) {
+    this.y = y;
+  }
+
+  protected void setZ(int z) {
+    this.z = z;
   }
 
   @Override

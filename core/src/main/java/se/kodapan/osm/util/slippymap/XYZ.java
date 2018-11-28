@@ -4,17 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author kalle
- * @since 8/25/13 1:29 PM
+ * Same as TMS, but no inverted Y axis.
+ * Used by OpenStreetMap.
+ *
+ * @author Karl Wettin <mailto:karl.wettin@kodapan.se>
+ * @since 2018-11-28
  */
-public class TMS extends SlippyMap {
+public class XYZ extends SlippyMap {
 
-  private static Logger log = LoggerFactory.getLogger(TMS.class);
+  private static Logger log = LoggerFactory.getLogger(XYZ.class);
 
-  public TMS() {
+  public XYZ() {
   }
 
-  public TMS(String urlPattern) {
+  public XYZ(String urlPattern) {
     super(urlPattern);
   }
 
@@ -23,7 +26,7 @@ public class TMS extends SlippyMap {
   public void listTiles(double southLatitude, double westLongitude, double northLatitude, double eastLongitude, int z, TileVisitor tileVisitor) {
     Tile northEast = tileFactory(eastLongitude, northLatitude, z);
     Tile southWest = tileFactory(westLongitude, southLatitude, z);
-    Tile tile = new TMSTile(0, 0, z);
+    Tile tile = new XYZTile(0, 0, z);
     for (int x = southWest.getX(); x <= northEast.getX(); x++) {
       for (int y = southWest.getY(); y <= northEast.getY(); y++) {
         tile.setX(x);
@@ -37,23 +40,17 @@ public class TMS extends SlippyMap {
   public Tile tileFactory(double longitude, double latitude, int z) {
     int x = (int) Math.floor((longitude + 180) / 360 * (1 << z));
     int y = (int) Math.floor((1 - Math.log(Math.tan(Math.toRadians(latitude)) + 1 / Math.cos(Math.toRadians(latitude))) / Math.PI) / 2 * (1 << z));
-
-    int invertedY = (1 << z) - y - 1;
-
-    return new TMSTile(x, invertedY, z);
+    return new XYZTile(x, y, z);
   }
 
   @Override
-  public TMSTile tileFactory(int x, int y, int z) {
-    return new TMSTile(x, y, z);
+  public XYZTile tileFactory(int x, int y, int z) {
+    return new XYZTile(x, y, z);
   }
 
-  public static class TMSTile extends Tile {
+  public static class XYZTile extends Tile {
 
-    private TMSTile() {
-    }
-
-    public TMSTile(int x, int y, int z) {
+    public XYZTile(int x, int y, int z) {
       super(x, y, z);
     }
 
@@ -62,8 +59,7 @@ public class TMS extends SlippyMap {
     }
 
     public double evaluateLatitude(int y, int z) {
-      int invertedY = (1 << z) - y - 1;
-      double n = Math.PI - (2.0 * Math.PI * invertedY) / Math.pow(2.0, z);
+      double n = Math.PI - (2.0 * Math.PI * y) / Math.pow(2.0, z);
       return Math.toDegrees(Math.atan(Math.sinh(n)));
     }
 
