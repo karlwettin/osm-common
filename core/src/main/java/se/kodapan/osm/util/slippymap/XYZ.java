@@ -24,11 +24,11 @@ public class XYZ extends SlippyMap {
 
   @Override
   public void listTiles(double southLatitude, double westLongitude, double northLatitude, double eastLongitude, int z, TileVisitor tileVisitor) {
-    Tile northEast = tileFactory(eastLongitude, northLatitude, z);
     Tile southWest = tileFactory(westLongitude, southLatitude, z);
+    Tile northEast = tileFactory(eastLongitude, northLatitude, z);
     Tile tile = new XYZTile(0, 0, z);
     for (int x = southWest.getX(); x <= northEast.getX(); x++) {
-      for (int y = southWest.getY(); y <= northEast.getY(); y++) {
+      for (int y = northEast.getY(); y <= southWest.getY(); y++) {
         tile.setX(x);
         tile.setY(y);
         tileVisitor.visit(tile);
