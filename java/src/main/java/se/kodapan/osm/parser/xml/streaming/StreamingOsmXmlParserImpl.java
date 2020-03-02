@@ -12,6 +12,8 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Parses .osm.xml files, but not .osc.xml files.
@@ -29,6 +31,7 @@ public class StreamingOsmXmlParserImpl extends se.kodapan.osm.parser.xml.streami
   private Node currentNode;
   private Way currentWay;
   private Relation currentRelation;
+  private Map<String, String> currentChangeset;
 
   @Override
   public void read(Reader xml, StreamingOsmXmlParserListener listener) throws Exception {
@@ -42,82 +45,111 @@ public class StreamingOsmXmlParserImpl extends se.kodapan.osm.parser.xml.streami
 
     int eventType = xmlr.getEventType();
     while (xmlr.hasNext()) {
-      eventType = xmlr.next();
+      try {
+        eventType = xmlr.next();
+      } catch (Exception e) {
+        throw e;
+      }
 
       if (eventType == XMLStreamConstants.START_ELEMENT) {
 
-        if ("node".equals(xmlr.getLocalName())) {
+        if (current != null) {
 
-          currentNode = new Node();
-          current = currentNode;
-          currentNode.setId(Long.valueOf(xmlr.getAttributeValue(null, "id")));
-          currentNode.setLatitude(Double.valueOf(xmlr.getAttributeValue(null, "lat")));
-          currentNode.setLongitude(Double.valueOf(xmlr.getAttributeValue(null, "lon")));
-          parseObjectAttributes(xmlr, currentNode, "id", "lat", "lon");
+          // we are within parsing some osm object
 
+          if ("nd".equals(xmlr.getLocalName())) {
+            // a node reference inside of a way
 
-        } else if ("way".equals(xmlr.getLocalName())) {
+            Node node = new Node();
+            node.setId(Long.valueOf(xmlr.getAttributeValue(null, "ref")));
+            node.addWayMembership(currentWay);
+            currentWay.addNode(node);
 
-          currentWay = new Way();
-          current = currentWay;
-          currentWay.setId(Long.valueOf(xmlr.getAttributeValue(null, "id")));
-          parseObjectAttributes(xmlr, currentWay, "id");
+          } else if ("member".equals(xmlr.getLocalName())) {
 
+            // multi polygon member
 
-        } else if ("nd".equals(xmlr.getLocalName())) {
-          // a node reference inside of a way
+            RelationMembership member = new RelationMembership();
+            member.setRelation(currentRelation);
+            member.setRole(xmlr.getAttributeValue(null, "role").intern());
 
-          Node node = new Node();
-          node.setId(Long.valueOf(xmlr.getAttributeValue(null, "ref")));
-          node.addWayMembership(currentWay);
-          currentWay.addNode(node);
-
-        } else if ("relation".equals(xmlr.getLocalName())) {
-
-          // multi polygon
-
-          currentRelation = new Relation();
-          current = currentRelation;
-          currentRelation.setId(Long.valueOf(xmlr.getAttributeValue(null, "id")));
-          parseObjectAttributes(xmlr, currentRelation, "id");
+            String type = xmlr.getAttributeValue(null, "type");
 
 
-        } else if ("member".equals(xmlr.getLocalName())) {
+            if ("way".equals(type)) {
+              member.setObject(new Way());
+            } else if ("node".equals(type)) {
+              member.setObject(new Node());
+            } else if ("relation".equals(type)) {
+              member.setObject(new Relation());
+            } else {
+              throw new RuntimeException("Unsupported relation member type: " + type);
+            }
 
-          // multi polygon member
+            member.getObject().setId(Long.valueOf(xmlr.getAttributeValue(null, "ref")));
+            member.getObject().addRelationMembership(member);
+            currentRelation.addMember(member);
 
-          RelationMembership member = new RelationMembership();
-          member.setRelation(currentRelation);
-          member.setRole(xmlr.getAttributeValue(null, "role").intern());
+          } else if ("tag".equals(xmlr.getLocalName())) {
 
-          String type = xmlr.getAttributeValue(null, "type");
+            // tag of any object type
+
+            String key = xmlr.getAttributeValue(null, "k");
+            String value = xmlr.getAttributeValue(null, "v");
+            current.setTag(key, value);
 
 
-          if ("way".equals(type)) {
-            member.setObject(new Way());
-          } else if ("node".equals(type)) {
-            member.setObject(new Node());
-          } else if ("relation".equals(type)) {
-            member.setObject(new Relation());
-          } else {
-            throw new RuntimeException("Unsupported relation member type: " + type);
           }
 
-          member.getObject().setId(Long.valueOf(xmlr.getAttributeValue(null, "ref")));
-          member.getObject().addRelationMembership(member);
-          currentRelation.addMember(member);
+        } else if (currentChangeset != null) {
+
+          // we are inside parsing a changeset
+          // what not
+          // there are tags, but we don't parse them
+
+        } else {
+
+            // starting states for node, way, relation, changeset, bounds
+
+            if ("node".equals(xmlr.getLocalName())) {
+
+              currentNode = new Node();
+              current = currentNode;
+              currentNode.setId(Long.valueOf(xmlr.getAttributeValue(null, "id")));
+              currentNode.setLatitude(Double.valueOf(xmlr.getAttributeValue(null, "lat")));
+              currentNode.setLongitude(Double.valueOf(xmlr.getAttributeValue(null, "lon")));
+              parseObjectAttributes(xmlr, currentNode, "id", "lat", "lon");
 
 
-        } else if ("tag".equals(xmlr.getLocalName())) {
+            } else if ("way".equals(xmlr.getLocalName())) {
 
-          // tag of any object type
+              currentWay = new Way();
+              current = currentWay;
+              currentWay.setId(Long.valueOf(xmlr.getAttributeValue(null, "id")));
+              parseObjectAttributes(xmlr, currentWay, "id");
 
-          String key = xmlr.getAttributeValue(null, "k");
-          String value = xmlr.getAttributeValue(null, "v");
-          current.setTag(key, value);
+            } else if ("relation".equals(xmlr.getLocalName())) {
 
-        }
+              // multi polygon
 
+              currentRelation = new Relation();
+              current = currentRelation;
+              currentRelation.setId(Long.valueOf(xmlr.getAttributeValue(null, "id")));
+              parseObjectAttributes(xmlr, currentRelation, "id");
+
+
+            } else if ("changeset".equals(xmlr.getLocalName())) {
+
+              currentChangeset = new HashMap<>();
+
+              for (int attributeIndex = 0; attributeIndex < xmlr.getAttributeCount(); attributeIndex++) {
+                String key = xmlr.getAttributeLocalName(attributeIndex);
+                String value = xmlr.getAttributeValue(attributeIndex);
+
+                currentChangeset.put(key, value);
+              }
+            }
+          }
 
       } else if (eventType == XMLStreamConstants.END_ELEMENT) {
 
@@ -135,6 +167,10 @@ public class StreamingOsmXmlParserImpl extends se.kodapan.osm.parser.xml.streami
           listener.processParsedRelation(currentRelation);
           currentRelation = null;
           current = null;
+
+        } else if ("changeset".equals(xmlr.getLocalName())) {
+          listener.processParsedChangeset(currentChangeset);
+          currentChangeset = null;
 
         } else {
           // what not
