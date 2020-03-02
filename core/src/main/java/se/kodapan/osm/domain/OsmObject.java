@@ -1,6 +1,7 @@
 package se.kodapan.osm.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -27,7 +28,8 @@ public abstract class OsmObject implements Serializable {
   private Long uid;
   private String user;
   private boolean visible;
-  private Long timestamp;
+  /** UTC */
+  private LocalDateTime timestamp;
 
   private Map<String, String> tags;
 
@@ -140,11 +142,11 @@ public abstract class OsmObject implements Serializable {
     this.tags = tags;
   }
 
-  public Long getTimestamp() {
+  public LocalDateTime getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(Long timestamp) {
+  public void setTimestamp(LocalDateTime timestamp) {
     this.timestamp = timestamp;
   }
 

@@ -21,6 +21,8 @@ import se.kodapan.osm.xml.OsmXmlWriter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -359,7 +361,7 @@ The id of the changeset to close. The user issuing this API call has to be the s
 
   public void create(long changeset, OsmObject object) throws Exception {
 
-    object.setTimestamp(System.currentTimeMillis());
+    object.setTimestamp(LocalDateTime.now(Clock.systemUTC()));
     object.setChangeset(changeset);
 
     StringWriter sw = new StringWriter(4096);

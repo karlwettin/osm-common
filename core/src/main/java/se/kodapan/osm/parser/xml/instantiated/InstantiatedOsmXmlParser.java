@@ -12,6 +12,7 @@ import se.kodapan.osm.parser.xml.OsmXmlParserException;
 import se.kodapan.osm.parser.xml.OsmXmlTimestampFormat;
 
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 
 /**
  * An .osm.xml and .osc.xml parser
@@ -51,8 +52,6 @@ public abstract class InstantiatedOsmXmlParser {
    * if false, OSM objects with a version greater than +1 of the current object in root will throw an exception.
    */
   protected boolean allowingMissingVersions = true;
-
-  protected OsmXmlTimestampFormat timestampFormat = new OsmXmlTimestampFormat();
 
   protected Root root = new PojoRoot();
 
@@ -122,14 +121,6 @@ public abstract class InstantiatedOsmXmlParser {
 
   public void setAllowingMissingVersions(boolean allowingMissingVersions) {
     this.allowingMissingVersions = allowingMissingVersions;
-  }
-
-  public OsmXmlTimestampFormat getTimestampFormat() {
-    return timestampFormat;
-  }
-
-  public void setTimestampFormat(OsmXmlTimestampFormat timestampFormat) {
-    this.timestampFormat = timestampFormat;
   }
 
   public Root getRoot() {

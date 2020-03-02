@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 /**
  * An .osm.xml and .osc.xml parser
@@ -666,11 +668,10 @@ public abstract class AbstractStreamingInstantiatedOsmXmlParser extends Instanti
         object.setVisible(Boolean.valueOf(value));
 
       } else if ("timestamp".equals(key)) {
-        try {
-          object.setTimestamp(timestampFormat.parse(value).getTime());
-        } catch (ParseException pe) {
-          throw new RuntimeException(pe);
-        }
+          if (value.endsWith("Z")) {
+            value = value.substring(0, value.length() -1);
+          }
+          object.setTimestamp(LocalDateTime.parse(value));
 
       } else {
 

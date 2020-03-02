@@ -11,6 +11,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import java.io.Reader;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 
 /**
  * Parses .osm.xml files, but not .osc.xml files.
@@ -23,8 +24,6 @@ import java.text.ParseException;
 public class StreamingOsmXmlParserImpl extends se.kodapan.osm.parser.xml.streaming.StreamingOsmXmlParser {
 
   private static final Logger log = LoggerFactory.getLogger(StreamingOsmXmlParserImpl.class);
-
-  private OsmXmlTimestampFormat timestampFormat = new OsmXmlTimestampFormat();
 
   private OsmObject current;
   private Node currentNode;
@@ -173,7 +172,10 @@ public class StreamingOsmXmlParserImpl extends se.kodapan.osm.parser.xml.streami
         object.setVisible(Boolean.valueOf(value));
 
       } else if ("timestamp".equals(key)) {
-        object.setTimestamp(timestampFormat.parse(value).getTime());
+        if (value.endsWith("Z")) {
+          value = value.substring(0, value.length() -1 );
+        }
+        object.setTimestamp(LocalDateTime.parse(value));
 
       } else {
 

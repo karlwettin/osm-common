@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 
@@ -196,6 +197,8 @@ public class OsmXmlWriter extends Writer {
     xml.write("\t</relation>\n");
   }
 
+  private static DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
   private void writeObjectHead(OsmObject osmObject) throws IOException {
     xml.write("\t<");
     xml.append(osmObject.accept(getOsmObjectTypeName));
@@ -208,7 +211,7 @@ public class OsmXmlWriter extends Writer {
 
     if (osmObject.getTimestamp() != null) {
       xml.write(" timestamp='");
-      xml.write(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date(osmObject.getTimestamp())));
+      xml.write(osmObject.getTimestamp().format(timestampFormatter));
       xml.write("'");
     }
 
