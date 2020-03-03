@@ -271,7 +271,7 @@ public class AdjacentClassVoronoiClusterer<ClassType> {
       }
       log.debug("Union " + entry.getKey() + " with " + entry.getValue().size() + " regions, or a total of " + count + " polygons.");
 
-      final List<Polygon> unions = new ArrayList<Polygon>();
+      final List<Polygon> unions = Collections.synchronizedList(new ArrayList<Polygon>());
 
       final Queue<List<Geometry>> queue = new ConcurrentLinkedQueue<List<Geometry>>(entry.getValue());
 
