@@ -14,6 +14,10 @@ import se.kodapan.osm.util.distance.ArcDistance;
  */
 public class JtsArcDistance extends ArcDistance {
 
+  public double calculate(Point a, Point b) {
+    return calculate(a.getY(), a.getX(), b.getY(), b.getX());
+  }
+
   public double calculate(Polygon polygon, Node node, double precisionKilometers, GeometryFactory geometryFactory) {
     return calculate(polygon, new Coordinate(node.getX(), node.getY()), precisionKilometers, geometryFactory);
   }
