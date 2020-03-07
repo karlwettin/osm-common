@@ -102,7 +102,7 @@ public class OsmXmlWriter extends Writer {
     if (osmObject.getTags() != null) {
       for (Map.Entry<String, String> tag : osmObject.getTags().entrySet()) {
         xml.write("\t\t<tag k='");
-        xml.write(tag.getKey());
+        xml.write(StringEscapeUtils.escapeXml(tag.getKey()));
         xml.write("' v='");
         xml.write(StringEscapeUtils.escapeXml(tag.getValue()));
         xml.write("' />\n");
@@ -223,7 +223,7 @@ public class OsmXmlWriter extends Writer {
 
     if (osmObject.getUser() != null) {
       xml.write(" user='");
-      xml.write(String.valueOf(osmObject.getUser()));
+      xml.write(StringEscapeUtils.escapeXml(String.valueOf(osmObject.getUser())));
       xml.write("'");
     }
 
