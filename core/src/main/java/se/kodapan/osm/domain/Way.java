@@ -35,7 +35,7 @@ public class Way extends OsmObject implements Serializable {
     if (!isLoaded()) {
       throw new NotLoadedException(this);
     }
-    return getNodes().size() > 2 && getNodes().get(0).equals(getNodes().get(getNodes().size() - 1));
+    return getNodes().size() > 2 && getNodes().get(0).getId().equals(getNodes().get(getNodes().size() - 1).getId());
   }
 
   public Way addNode(Node node) {
