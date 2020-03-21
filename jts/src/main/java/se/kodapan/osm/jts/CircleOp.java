@@ -48,4 +48,36 @@ public class CircleOp {
 
     return geometryFactory.createPolygon(geometryFactory.createLinearRing(coordinates), null);
   }
+
+  /**
+   * Calculates an approximated number of kilometers radius one have to draw at a given latitude
+   * in order to create a circle that equals the same amount of pixels as if it was drawn at the equator
+   * when using 3857 projection.
+   *
+   * This was implemented to allow for equal pixel spacing between place names on a map.
+   *
+   *
+   *
+   * @param kmRadiusAtEquator
+   * @param latitude
+   * @return
+   */
+  public static double calculateEvenRadiusKilometers(double kmRadiusAtEquator, double latitude) {
+    if (latitude < 0) {
+      latitude *= -1;
+    }
+    return kmRadiusAtEquator * (-0.009897 * latitude + 1);
+  }
+
+  public Polygon circleEquatorEquality(Point point, double radiusKilometersAtEquator, int circumferenceResolution) {
+    return circleEquatorEquality(point.getCoordinate(), radiusKilometersAtEquator, circumferenceResolution);
+
+  }
+  public Polygon circleEquatorEquality(Coordinate coordinate, double radiusKilometersAtEquator, int circumferenceResolution) {
+    return circleEquatorEquality(coordinate.x, coordinate.y, radiusKilometersAtEquator, circumferenceResolution);
+
+  }
+  public Polygon circleEquatorEquality(double centroidLongitude, double centroidLatitude, double radiusKilometersAtEquator, int circumferenceResolution) {
+    return circle(centroidLongitude, centroidLatitude, calculateEvenRadiusKilometers(radiusKilometersAtEquator, centroidLatitude), circumferenceResolution);
+  }
 }
