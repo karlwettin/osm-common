@@ -9,6 +9,8 @@ import java.util.*;
 /**
  * Creates JTS geometries out of OSM nodes, ways and relations.
  *
+ * This is half baked. Consider using some tool to convert OSM to GeoJSON and add JTS GeoJsonReader dependency.
+ *
  * @author kalle
  * @since 2015-06-03 03:22
  */
