@@ -56,7 +56,9 @@ public class CircleOp {
    *
    * This was implemented to allow for equal pixel spacing between place names on a map.
    *
-   *
+   * For example, see resources/circleop-even-radius-example.geo.json
+   * or
+   * https://gist.github.com/karlwettin/fed80b915a69509cd362992e4fd55f31
    *
    * @param kmRadiusAtEquator
    * @param latitude
