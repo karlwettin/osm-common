@@ -60,7 +60,7 @@
         <scope>test</scope>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.0.13</version>
+        <version>1.2.0</version>
       </dependency>
 
       <dependency>
